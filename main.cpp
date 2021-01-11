@@ -15,8 +15,7 @@ int main()
         printf("No image data \n");
         return -1;
     }
-    namedWindow("Display Image", WINDOW_AUTOSIZE );
-    imshow("Display Image", image);
+    imshow("Pixel art", image);
     
     int nbr_lignes = image.rows;
     int nbr_colonnes = image.cols;
@@ -24,6 +23,15 @@ int main()
     std::cout<<"lignes : "<<nbr_lignes<<" colonnes : "<<nbr_colonnes<<std::endl;
     
     waitKey(0);
+    destroyAllWindows();
+    
+    similarity_graph graphe(image);
+    imshow("YUV", graphe.image_YUV);
+    
+    waitKey(0);
+    destroyAllWindows();
+    
+    graphe.init_graph();
 
     return 0;
 }
