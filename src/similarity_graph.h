@@ -10,14 +10,17 @@ class similarity_graph
 public:
 
 	similarity_graph();
-	similarity_graph(int nbrows, int nbcols, Mat image);
+	similarity_graph(Mat image);
 	
-	int rows;
-	int cols;
 	Mat pixels_nodes;
+	Mat image_YUV;
+	
+	void init_graph();
 	
 private:
 	
+	int rows;
+	int cols;
 
 };
 
