@@ -21,9 +21,9 @@ similarity_graph::similarity_graph(Mat image)
 void similarity_graph::init_graph()
 {
 	//Connexion pour les pixels ayant 8 voisins.
-	for(int i=1;i<rows-2;i++)
+	for(int i=1;i<rows-1;i++)
 	{
-		for(int j=1;j<cols-2;j++)
+		for(int j=1;j<cols-1;j++)
 		{
 			for(int k=0;k<8;k++)
 			{
