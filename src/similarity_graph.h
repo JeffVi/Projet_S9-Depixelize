@@ -16,11 +16,14 @@ public:
 	Mat image_YUV;
 	
 	void init_graph();
+	void compare_YUV();
 	
 private:
 	
 	int rows;
 	int cols;
+	
+	std::tuple<int, int, int> get_voisin(int i, int j, int k);
 
 };
 
