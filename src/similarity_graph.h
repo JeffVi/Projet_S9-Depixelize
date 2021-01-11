@@ -22,6 +22,7 @@ private:
 	
 	int rows;
 	int cols;
+	Mat imagep;
 	
 	std::tuple<int, int, int> get_voisin(int i, int j, int k);
 
