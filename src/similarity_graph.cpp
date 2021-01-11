@@ -12,7 +12,8 @@ similarity_graph::similarity_graph(Mat image)
 	sizes[1] = cols;
 	sizes[2] = 8;
 	
-	Mat m(3,sizes,CV_8UC1,Scalar(0));
+	int z = 0;
+	Mat m(3,sizes,CV_32SC1,z);
 	pixels_nodes = m;
 	
 	cvtColor(image,image_YUV,COLOR_BGR2YUV);
@@ -27,7 +28,7 @@ void similarity_graph::init_graph()
 		{
 			for(int k=0;k<8;k++)
 			{
-				pixels_nodes.at<int>(i,j,0) = 1;
+				pixels_nodes.at<int>(i,j,k) = 1;
 			}
 		}
 	}
