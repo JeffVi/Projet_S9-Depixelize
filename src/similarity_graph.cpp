@@ -6,6 +6,7 @@ similarity_graph::similarity_graph(Mat image)
 {
 	rows = image.rows;
     	cols = image.cols;
+	imagep = image;
 	
 	int sizes[3];
 	sizes[0] = rows;
