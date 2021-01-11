@@ -8,8 +8,8 @@ similarity_graph::similarity_graph(Mat image)
     	cols = image.cols;
 	
 	int sizes[3];
-	sizes[0] = nbrows;
-	sizes[1] = nbcols;
+	sizes[0] = rows;
+	sizes[1] = cols;
 	sizes[2] = 8;
 	
 	Mat m(3,sizes,CV_8UC1,Scalar(0));
