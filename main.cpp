@@ -8,7 +8,7 @@ using namespace cv;
 int main()
 {
     Mat image;
-    image = imread("img/pixelart.png");
+    image = imread("img/pixelart3.png");
 
     if ( !image.data )
     {
@@ -23,16 +23,17 @@ int main()
     std::cout<<"lignes : "<<nbr_lignes<<" colonnes : "<<nbr_colonnes<<std::endl;
     
     waitKey(0);
-    destroyAllWindows();
     
     similarity_graph graphe(image);
     imshow("YUV", graphe.image_YUV);
     
     waitKey(0);
-    destroyAllWindows();
     
     graphe.init_graph();
     graphe.compare_YUV();
+    
+    imshow("nodes", graphe.draw_nodes(21));
+    waitKey(0);
 
     return 0;
 }
