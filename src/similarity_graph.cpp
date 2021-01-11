@@ -187,3 +187,40 @@ std::tuple<int, int, int> similarity_graph::get_voisin(int i, int j, int k)
 	
 	return std::make_tuple(vi,vj,vk);
 }
+
+Mat similarity_graph::draw_nodes(int N)
+{
+	Mat nodes;
+	resize(imagep, nodes, Size(), N, N, INTER_NEAREST);
+	nodes = nodes + Scalar(50,50,50);//pour mieux voir les lignes noires
+	
+	//Découpage
+	for(int i=0;i<rows;i++)
+	{
+		line(nodes,Point(0,i*N),Point(cols*N,i*N),Scalar(255,255,255));
+	}
+	
+	for(int j=0;j<cols;j++)
+	{
+		line(nodes,Point(j*N,0),Point(j*N,rows*N),Scalar(255,255,255));
+	}
+	
+	for(int i=0;i<rows;i++)
+	{
+		for(int j=0;j<cols;j++)
+		{
+			for(int k=0;k<8;k++)
+			{
+				if(pixels_nodes.at<int>(i,j,k) == 1)
+				{
+					auto voisin = get_voisin(i,j,k);
+					int vi = std::get<0>(voisin);
+					int vj = std::get<1>(voisin);
+					line(nodes,Point(j*N + N/2,i*N + N/2),Point(vj*N + N/2,vi*N + N/2),Scalar(0,0,0));
+				}
+			}
+		}
+	}
+	
+	return nodes;
+}
