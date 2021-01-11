@@ -17,6 +17,7 @@ public:
 	
 	void init_graph();
 	void compare_YUV();
+	Mat draw_nodes(int N);
 	
 private:
 	
