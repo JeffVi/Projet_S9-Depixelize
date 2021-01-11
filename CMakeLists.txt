@@ -10,7 +10,8 @@ add_executable( Depix main.cpp )
 
 # ajout de nouvelles librairies
 # add_library([nom librairie] [chemin vers .cpp])
+add_library( similarity_graph src/similarity_graph.cpp )
 
 # lier les librairies au programme
 # target_link_libraries( [nom programme] [nom librairie 1] [nom librairie 2] [nom librairie 3]... )
-target_link_libraries( Depix ${OpenCV_LIBS} )
+target_link_libraries( Depix ${OpenCV_LIBS} similarity_graph )
