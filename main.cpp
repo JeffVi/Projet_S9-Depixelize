@@ -32,6 +32,7 @@ int main()
     destroyAllWindows();
     
     graphe.init_graph();
+    graphe.compare_YUV();
 
     return 0;
 }
