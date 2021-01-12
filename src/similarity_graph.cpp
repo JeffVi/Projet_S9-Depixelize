@@ -147,6 +147,7 @@ void similarity_graph::resolu()
 		}
 	}
 	
+	//Cas ambigue
 	for(int i=0;i<rows-1;i++)
 	{
 		for(int j=0;j<cols-1;j++)
