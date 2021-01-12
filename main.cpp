@@ -32,9 +32,13 @@ int main()
     
     graphe.init_graph();
     graphe.compare_YUV();
+    
+    imshow("nodes avant resolution", graphe.draw_nodes(21));
+    waitKey(0);
+    
     graphe.resolu();
     
-    imshow("nodes", graphe.draw_nodes(21));
+    imshow("nodes apres resolution", graphe.draw_nodes(21));
     waitKey(0);
 
     return 0;
