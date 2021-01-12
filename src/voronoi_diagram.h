@@ -15,6 +15,7 @@ public:
 	float px;
 	float py;
 	std::vector<Point> vertex;
+	Scalar color;
 };
 
 class voronoi
