@@ -14,9 +14,11 @@ public:
 	
 	Mat pixels_nodes;
 	Mat image_YUV;
+	Mat nodes_res;
 	
 	void init_graph();
 	void compare_YUV();
+	void resolu();
 	Mat draw_nodes(int N);
 	std::tuple<int, int, int> get_voisin(int i, int j, int k);
 	
