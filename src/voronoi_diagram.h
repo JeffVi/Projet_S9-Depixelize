@@ -14,11 +14,7 @@ public:
 	
 	float px;
 	float py;
-	
-private:
-	
 	std::vector<Point> vertex;
-	
 };
 
 class voronoi
