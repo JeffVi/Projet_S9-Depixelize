@@ -9,7 +9,7 @@ using namespace cv;
 int main()
 {
     Mat image;
-    image = imread("img/pixelart3.png");
+    image = imread("img/smw_boo_input.png");
 
     if ( !image.data )
     {
