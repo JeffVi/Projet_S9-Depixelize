@@ -9,9 +9,9 @@ include_directories( ${OpenCV_INCLUDE_DIRS} )
 add_executable( Depix main.cpp )
 
 # ajout de nouvelles librairies
-# add_library([nom librairie] [chemin vers .cpp])
-add_library( similarity_graph src/similarity_graph.cpp )
+# add_library([nom librairie] [chemin vers .cpp 1 ] [chemin vers .cpp 2 ] [chemin vers .cpp 3 ]... )
+add_library( lDepix src/similarity_graph.cpp src/voronoi_diagram.cpp )
 
 # lier les librairies au programme
 # target_link_libraries( [nom programme] [nom librairie 1] [nom librairie 2] [nom librairie 3]... )
-target_link_libraries( Depix ${OpenCV_LIBS} similarity_graph )
+target_link_libraries( Depix ${OpenCV_LIBS} lDepix )
