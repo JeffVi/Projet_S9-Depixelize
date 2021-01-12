@@ -16,6 +16,7 @@ public:
 	float py;
 	std::vector<Point> vertex;
 	Scalar color;
+	std::vector<int> id;
 };
 
 class voronoi
@@ -37,7 +38,8 @@ private:
 	Mat imagep;
 	Mat pixels_nodes_todo;
 	std::vector<cell> cells;
-
+	
+	std::vector<int> get_cell_adj(int i, int j, int k);
 };
 
 #endif
