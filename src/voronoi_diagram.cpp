@@ -26,6 +26,7 @@ void voronoi::init_cells()
 			c.vertex.push_back(Point((j+1)*scale,i*scale)); 	// haut droite
 			c.vertex.push_back(Point((j+1)*scale,(i+1)*scale)); 	// bas droite
 			c.vertex.push_back(Point(j*scale,(i+1)*scale)); 	// bas gauche
+			c.color = imagep.at<Vec3b>(i,j);
 			cells.push_back(c);
 		}
 	}
