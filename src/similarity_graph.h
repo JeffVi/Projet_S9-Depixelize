@@ -18,14 +18,13 @@ public:
 	void init_graph();
 	void compare_YUV();
 	Mat draw_nodes(int N);
+	std::tuple<int, int, int> get_voisin(int i, int j, int k);
 	
 private:
 	
 	int rows;
 	int cols;
 	Mat imagep;
-	
-	std::tuple<int, int, int> get_voisin(int i, int j, int k);
 
 };
 
