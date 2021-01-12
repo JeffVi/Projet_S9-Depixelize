@@ -26,7 +26,7 @@ class voronoi
 public:
 
 	voronoi();
-	voronoi(Mat image ,Mat pixels_nodes);
+	voronoi(Mat image ,Mat pixels_nodes, float diagram_scale);
 	
 	void init_cells();
 	void compute_vertex();
@@ -34,6 +34,7 @@ public:
 	
 private:
 	
+	float scale;
 	int rows;
 	int cols;
 	Mat imagep;
