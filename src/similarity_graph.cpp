@@ -128,6 +128,53 @@ void similarity_graph::compare_YUV()
 	}
 }
 
+void similarity_graph::resolu()
+{
+	nodes_res = pixels_nodes;
+	
+	//Cas sans ambiguite
+	for(int i=0;i<rows-1;i++)
+	{
+		for(int j=0;j<cols-1;j++)
+		{
+			if(nodes_res.at<int>(i,j+1,4) == 1 && nodes_res.at<int>(i,j+1,6) == 1 && nodes_res.at<int>(i+1,j,0) == 1 && nodes_res.at<int>(i+1,j,2) == 1)
+			{
+				nodes_res.at<int>(i,j,3) = 0;
+				nodes_res.at<int>(i,j+1,5) = 0;
+				nodes_res.at<int>(i+1,j,1) = 0;
+				nodes_res.at<int>(i+1,j+1,7) = 0;
+			}
+		}
+	}
+	
+	for(int i=0;i<rows-1;i++)
+	{
+		for(int j=0;j<cols-1;j++)
+		{
+			if(nodes_res.at<int>(i,j,3) == 1 && nodes_res.at<int>(i,j+1,5) == 1)
+			{
+				int cpt1 = 0;
+				int cpt2 = 0;
+				for(int k=0;k<8;k++)
+				{
+					cpt1 += nodes_res.at<int>(i,j,k);
+					cpt2 += nodes_res.at<int>(i,j+1,k);
+				}
+				if(cpt1>cpt2)
+				{
+					nodes_res.at<int>(i,j,3) = 0;
+					nodes_res.at<int>(i+1,j+1,7) = 0;
+				}
+				else 
+				{
+					nodes_res.at<int>(i,j+1,5) = 0;
+					nodes_res.at<int>(i+1,j,1) = 0;
+				}
+			}
+		}
+	}
+}
+
 std::tuple<int, int, int> similarity_graph::get_voisin(int i, int j, int k)
 {
 	int vi;
