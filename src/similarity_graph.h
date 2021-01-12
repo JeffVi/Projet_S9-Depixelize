@@ -14,7 +14,6 @@ public:
 	
 	Mat pixels_nodes;
 	Mat image_YUV;
-	Mat nodes_res;
 	
 	void init_graph();
 	void compare_YUV();
