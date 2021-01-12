@@ -31,3 +31,20 @@ void voronoi::init_cells()
 		}
 	}
 }
+
+Mat voronoi::draw_voronoi()
+{
+	Mat voro = Mat(rows*ceil(scale),cols*ceil(scale),CV_8UC3,Scalar(0));
+	std::vector<cell>::iterator it;
+	
+	for(it=cells.begin(); it!=cells.end(); it++)
+	{
+		cell cellule = *it;
+		std::vector<Point> vertex_list = cellule.vertex;
+		const int npt = vertex_list.size();
+		const Point* ppt = &vertex_list[0];
+		fillPoly(voro,&ppt,&npt,1,cellule.color);
+	}
+		
+	return voro;
+}
