@@ -32,6 +32,7 @@ int main()
     
     graphe.init_graph();
     graphe.compare_YUV();
+    graphe.resolu();
     
     imshow("nodes", graphe.draw_nodes(21));
     waitKey(0);
