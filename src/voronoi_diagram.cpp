@@ -132,14 +132,6 @@ void voronoi::compute_vertex()
 					int vk_adj2 = voisin[8];
 					
 					
-					std::vector<Point> vertex = cells[i*cols + j].vertex;
-					std::vector<Point> vertex_voisin = cells[vi*cols + vj].vertex;
-					std::vector<Point> vertex_voisin_adj1 = cells[vi_adj1*cols + vj_adj1].vertex;
-					std::vector<Point> vertex_voisin_adj2 = cells[vi_adj2*cols + vj_adj2].vertex;
-					
-					//Cellule courante
-					
-					
 				}
 			}			
 		}
