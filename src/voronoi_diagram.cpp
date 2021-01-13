@@ -4,6 +4,47 @@ cell::cell() : px(0.0f), py(0.0f) {}
 
 cell::cell(float x, float y) : px(x), py(y) {}
 
+int cell::get_update_id_vertex_origin(int k)
+{
+	int id;
+	
+	switch(k)
+	{
+		// haut droite
+		case 1:
+		id = id_vertex[1];
+		id_vertex[1] = -1;
+		id_vertex[2]++;
+		id_vertex[3]++;
+		break;
+		
+		// bas droite	
+		case 3:
+		id = id_vertex[2];
+		id_vertex[2] = -1;
+		id_vertex[3]++;
+		break;
+		
+		// bas gauche
+		case 5:
+		id = id_vertex[3];
+		id_vertex[3] = -1;
+		break;
+		
+		// haut droite	
+		case 7:
+		id = id_vertex[0];
+		id_vertex[0] = -1;
+		id_vertex[1]++;
+		id_vertex[2]++;
+		id_vertex[3]++;
+		break;
+	}
+	
+	if(id == -1){std::cout<<"vertex already changed !"<<std::endl;}
+	return id;
+}
+
 voronoi::voronoi(){}
 
 voronoi::voronoi(Mat image ,Mat pixels_nodes, float diagram_scale)
