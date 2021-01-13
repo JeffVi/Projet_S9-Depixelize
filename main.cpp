@@ -45,7 +45,13 @@ int main()
     voro.init_cells();
     Mat img_voro = voro.draw_voronoi();
     
-    imshow("voronoi", img_voro);
+    imshow("voronoi pixel", img_voro);
+    waitKey(0);
+    
+    voro.compute_vertex();
+    img_voro= voro.draw_voronoi();
+    
+    imshow("voronoi cellules", img_voro);
     waitKey(0);
 
     return 0;
