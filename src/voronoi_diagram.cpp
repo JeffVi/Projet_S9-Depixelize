@@ -95,8 +95,10 @@ void voronoi::compute_vertex()
 					int vk = voisin[2];
 					int vi_adj1 = voisin[3];
 					int vj_adj1 = voisin[4];
-					int vi_adj2 = voisin[5];
-					int vj_adj2 = voisin[6];
+					int vk_adj1 = voisin[5];
+					int vi_adj2 = voisin[6];
+					int vj_adj2 = voisin[7];
+					int vk_adj2 = voisin[8];
 					
 					
 					std::vector<Point> vertex = cells[i*cols + j].vertex;
@@ -123,23 +125,25 @@ std::vector<int> voronoi::get_cell_adj(int i, int j, int k)
 	//Cellule adjacente 1
 	int vi_adj1;
 	int vj_adj1;
+	int vk_adj1;
 	
 	//Cellule adjacente 2
 	int vi_adj2;
 	int vj_adj2;
+	int vk_adj2;
 	
 	std::vector<int> voisins;
 	
-	switch(k)
-	{
-		case 1:
+	case 1:
 		vi = i-1;
 		vj = j+1;
 		vk = 5;
 		vi_adj1 = i-1;
 		vj_adj1 = j;
+		vk_adj1 = 3;
 		vi_adj2 = i;
 		vj_adj2 = j+1;
+		vk_adj2 = 7;
 		break;
 				
 		case 3:
@@ -148,8 +152,10 @@ std::vector<int> voronoi::get_cell_adj(int i, int j, int k)
 		vk = 7;
 		vi_adj1 = i;
 		vj_adj1 = j+1;
+		vk_adj1 = 5;
 		vi_adj2 = i+1;
 		vj_adj2 = j;
+		vk_adj2 = 1;
 		break;
 		
 		case 5:
@@ -158,8 +164,10 @@ std::vector<int> voronoi::get_cell_adj(int i, int j, int k)
 		vk = 1;
 		vi_adj1 = i+1;
 		vj_adj1 = j;
+		vk_adj1 = 7;
 		vi_adj2 = i;
 		vj_adj2 = j-1;
+		vk_adj2 = 3;
 		break;
 				
 		case 7:
@@ -168,8 +176,10 @@ std::vector<int> voronoi::get_cell_adj(int i, int j, int k)
 		vk = 3;
 		vi_adj1 = i;
 		vj_adj1 = j-1;
+		vk_adj1 = 1;
 		vi_adj2 = i-1;
 		vj_adj2 = j;
+		vk_adj2 = 5;
 		break;
 	}
 	
@@ -178,8 +188,10 @@ std::vector<int> voronoi::get_cell_adj(int i, int j, int k)
 	voisins.push_back(vk);
 	voisins.push_back(vi_adj1);
 	voisins.push_back(vj_adj1);
+	voisins.push_back(vk_adj1);
 	voisins.push_back(vi_adj2);
 	voisins.push_back(vj_adj2);
+	voisins.push_back(vk_adj2);
 	
 	return voisins;
 }
