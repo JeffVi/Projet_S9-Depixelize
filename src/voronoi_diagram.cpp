@@ -131,7 +131,60 @@ void voronoi::compute_vertex()
 					int vj_adj2 = voisin[7];
 					int vk_adj2 = voisin[8];
 					
+					cells_pixels_nodes.at<int>(i,j,2*k+1) = 0;
+					cells_pixels_nodes.at<int>(vi,vj,vk) = 0;
 					
+					//Cellule courante
+					cell cell_cour = cells[i*cols + j];
+					std::vector<Point> vertex = cell_cour.vertex;
+					int vertex_id = cell_cour.get_update_id_vertex_origin(2*k+1);
+					Point P1 = Point(cell_cour.py,cell_cour.px);
+					
+					//Cellule voisine
+					cell cell_vois = cells[vi*cols + vj];
+					std::vector<Point> vertex_voisin = cell_vois.vertex;
+					int vertex_id_voisin = cell_vois.get_update_id_vertex_origin(vk);
+					Point P2 = Point(cell_vois.py,cell_vois.px);
+					
+					//Cellule adjacente 1
+					cell cell_adj1 = cells[vi_adj1*cols + vj_adj1];
+					std::vector<Point> vertex_voisin_adj1 = cell_adj1.vertex;
+					int vertex_id_voisin_adj1 = cell_adj1.get_id_vertex_origin(vk_adj1);
+					Point P3 = Point(cell_adj1.py,cell_adj1.px);
+					if(vertex_id_voisin_adj1==-1){break;}
+					
+					//Cellule adjacente 2
+					cell cell_adj2 = cells[vi_adj2*cols + vj_adj2];
+					std::vector<Point> vertex_voisin_adj2 = cell_adj2.vertex;
+					int vertex_id_voisin_adj2 = cell_adj2.get_id_vertex_origin(vk_adj2);
+					Point P4 = Point(cell_adj2.py,cell_adj2.px);
+					if(vertex_id_voisin_adj2==-1){break;}
+					
+					//Compute vertex
+					Point midpoint = P1 + ((P2 - P1)/2.0f);
+					Point vertex1 = midpoint + ((P3 - midpoint)/2.0f);
+					Point vertex2 = midpoint + ((P4 - midpoint)/2.0f);
+					
+					//Update vertex
+					vertex[vertex_id] = vertex2;
+					vertex.insert(vertex.begin() + vertex_id, vertex1);
+					
+					vertex_voisin[vertex_id_voisin] = vertex1;
+					vertex_voisin.insert(vertex_voisin.begin() + vertex_id_voisin, vertex2);
+					
+					vertex_voisin_adj1[vertex_id_voisin_adj1] = vertex1;
+					vertex_voisin_adj2[vertex_id_voisin_adj2] = vertex2;
+					
+					//Update cellule
+					cell_cour.vertex = vertex;
+					cell_vois.vertex = vertex_voisin;
+					cell_adj1.vertex = vertex_voisin_adj1;
+					cell_adj2.vertex = vertex_voisin_adj2;
+					
+					cells[i*cols + j] = cell_cour;
+					cells[vi*cols + vj] = cell_vois;
+					cells[vi_adj1*cols + vj_adj1] = cell_adj1;
+					cells[vi_adj2*cols + vj_adj2] = cell_adj2;
 				}
 			}			
 		}
