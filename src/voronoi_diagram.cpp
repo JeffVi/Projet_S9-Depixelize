@@ -141,6 +141,8 @@ void voronoi::polygon_union()
 			}*/
 		}	
 	}
+}
+
 void voronoi::compute_vertex()
 {
 	Mat cells_pixels_nodes = pixels_nodes_todo.clone();
