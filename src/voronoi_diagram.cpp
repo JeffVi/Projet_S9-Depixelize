@@ -210,7 +210,9 @@ std::vector<int> voronoi::get_cell_adj(int i, int j, int k)
 	
 	std::vector<int> voisins;
 	
-	case 1:
+	switch(k)
+	{
+		case 1:
 		vi = i-1;
 		vj = j+1;
 		vk = 5;
