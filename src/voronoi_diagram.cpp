@@ -108,6 +108,39 @@ void voronoi::init_cells()
 	}
 }
 
+
+void voronoi::polygon_union()
+{
+
+
+	for(int i = 0;i < rows-1; i++)
+	{
+		for (int j = 0; j < cols-1; j++)
+		{
+			bool have_adj = false; 
+
+			if (cells[i,j].united == false)
+			{
+				if (pixels_nodes_todo.at<int>(i, j, 2) == 1) have_adj = true;
+
+				if (pixels_nodes_todo.at<int>(i, j, 3) == 1) have_adj = true;
+
+				if (pixels_nodes_todo.at<int>(i, j, 4) == 1) have_adj = true;
+
+				union_cells.push_back(cell(cells[i, j].px, cells[i, j].py));
+			}
+
+			while(have_adj)
+			{ 			
+				//TODO 					
+			}
+			/*std::vector<cell>::iterator it;
+			for (it = cells.begin(); it != cells.end(); it++)
+			{
+
+			}*/
+		}	
+	}
 void voronoi::compute_vertex()
 {
 	Mat cells_pixels_nodes = pixels_nodes_todo.clone();

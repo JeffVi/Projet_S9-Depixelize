@@ -14,6 +14,8 @@ public:
 	
 	float px;
 	float py;
+	bool united = false;
+
 	std::vector<Point> vertex;
 	Scalar color;
 	std::vector<int> id_vertex;
@@ -27,10 +29,13 @@ class voronoi
 public:
 
 	voronoi();
-	voronoi(Mat image ,Mat pixels_nodes, float diagram_scale);
+	voronoi(Mat image, Mat pixels_nodes, float diagram_scale);
+
+
 	
 	void init_cells();
 	void compute_vertex();
+	void polygon_union();
 	Mat draw_voronoi();
 	
 private:
@@ -41,6 +46,7 @@ private:
 	Mat imagep;
 	Mat pixels_nodes_todo;
 	std::vector<cell> cells;
+	std::vector<cell> union_cells;
 	
 	std::vector<int> get_cell_adj(int i, int j, int k);
 };
