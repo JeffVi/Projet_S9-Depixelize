@@ -290,3 +290,18 @@ Mat voronoi::draw_voronoi()
 		
 	return voro;
 }
+
+void voronoi::draw_cells(Mat& voro)
+{
+	std::vector<cell>::iterator it;
+	voro = voro + Scalar(100,100,100);//pour mieux voir les lignes noires
+	
+	for(it=cells.begin(); it!=cells.end(); it++)
+	{
+		cell cellule = *it;
+		std::vector<Point> vertex_list = cellule.vertex;
+		const int npt = vertex_list.size();
+		const Point* ppt = &vertex_list[0];
+		polylines(voro,&ppt,&npt,1,true,Scalar(0,0,0));
+	}
+}
