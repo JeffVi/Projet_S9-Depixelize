@@ -32,7 +32,8 @@ public:
 	voronoi(Mat image, Mat pixels_nodes, float diagram_scale);
 
 
-	
+	void union_2vertex(int indice_i, int indice_j);
+	void union_3vertex(int indice_i, int indice_j);
 	void init_cells();
 	void compute_vertex();
 	void polygon_union();
