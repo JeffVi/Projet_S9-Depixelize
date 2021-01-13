@@ -108,6 +108,7 @@ void voronoi::init_cells()
 	}
 }
 
+
 void voronoi::compute_vertex()
 {
 	Mat cells_pixels_nodes = pixels_nodes_todo.clone();
@@ -304,4 +305,99 @@ void voronoi::draw_cells(Mat& voro)
 		const Point* ppt = &vertex_list[0];
 		polylines(voro,&ppt,&npt,1,true,Scalar(0,0,0));
 	}
+}
+
+void voronoi::polygon_union()
+{
+
+
+	for(int i = 0;i < rows-1; i++)
+	{
+		for (int j = 0; j < cols-1; j++)
+		{
+			bool have_adj = false; 
+
+			if (cells[j*i +j].united == false) // On vérifie si la cellule a déjà été uni et si elle a des voisins de couleur similaire
+			{
+				if (pixels_nodes_todo.at<int>(i, j, 2) == 1) have_adj = true;
+
+				if (pixels_nodes_todo.at<int>(i, j, 3) == 1) have_adj = true;
+
+				if (pixels_nodes_todo.at<int>(i, j, 4) == 1) have_adj = true;
+
+				union_cells.push_back(cell(cells[i, j].px, cells[i, j].py));
+
+				std::vector<std::vector<int>>cells_indice;  // Permet de stocker les indices des cellules composant la grande cellule
+
+				std::vector<int> indices{ i,j };
+				cells_indice.push_back(indices);
+
+				while (have_adj) // Boucle permettant de créer l'union des toutes les cellules respectant les conditions
+				{
+					std::vector<std::vector<int>>::iterator it;
+					std::vector<std::vector<int>>adjacent; // On met dans ce vecteur toutes les cellules adjacentes trouvées pour chaque petite cellule
+
+					for (it = cells_indice.begin(); it != cells_indice.end(); it++) // on va parcourir la grosse cellule
+					{
+						std::vector<int> vec = *it;
+						int indice_i = vec[0];
+						int indice_j = vec[1];
+						bool found = false;
+
+						//Pour chaque cellule contenues dans la grosse cellule on cherche un voisin de couleur similaire non uni à la cellule
+
+						if (pixels_nodes_todo.at<int>(indice_i, indice_j, 2) == 1 && cells[indice_i * indice_j + indice_j+1].united == false) // cellule droite
+						{
+
+							std::vector<int> cellule_adj{ indice_i, indice_j +1};
+							adjacent.push_back(cellule_adj);
+
+						}
+
+						if (pixels_nodes_todo.at<int>(indice_i, indice_j, 3) == 1 && cells[(indice_i+1) * indice_j + indice_j + 1].united == false && found == false) // cellule diag
+						{
+
+							std::vector<int> cellule_adj{ indice_i+1, indice_j + 1 };
+							adjacent.push_back(cellule_adj);
+
+						}
+
+						if (pixels_nodes_todo.at<int>(indice_i, indice_j, 4) == 1 && cells[(indice_i + 1) * indice_j + indice_j].united == false && found == false) // cellule bas
+						{
+
+							std::vector<int> cellule_adj{ indice_i + 1, indice_j };
+							adjacent.push_back(cellule_adj);
+
+						}
+						// A partir de maintenant on a toutes les cellules adjacentes a la grosse cellule dans un vecteur
+						// Ce vecteur peut contenir plusieur fois la meme cellule ce qui est normal
+						// En fonction du nombre de fois qu'il contient une cellule l'union ne se fera pas de la meme façon (3 vertex partages)
+						// On va alors unir la permiere cellule qui se repete avec la grosse cellule
+						// Si aucune cellule ne se repete alors on va unir la premiere cellule du vecteur
+						// A la fin de la booucle on ooublie pas de marquer comme traitee la cellule que l on vient d unir
+						// On verifie a la fin de la boucle qu il y a encore des cellules adjacentes a la nouvelle grosse cellule
+						// Si oui alors on reboucle si non alors on en a fini avec cette grosse cellule
+
+						//TODO regarder les si des cellules ce repetent et appeler la bonne fonction rajouter la cellule a traiter dans le vecteur cells_indices
+						//Avec le nouveau vecteur cell_indice verifier si il reste des cellules adjacentes a traiter
+
+
+					}
+				}
+			}
+		}	
+	}
+}
+
+
+void union_2vertex(int indice_i, int indice_j) 
+{
+// TODO faire l union de la cellule avec indice_i indice_j avec la grosse cellule
+// Pour faire l union on ajoute des vertex aux bons emplacements a la grosse cellule
+}
+
+
+void union_3vertex(int indice_i, int indice_j)
+{
+
 }
