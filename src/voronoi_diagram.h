@@ -32,7 +32,7 @@ public:
 	void init_cells();
 	void compute_vertex();
 	Mat draw_voronoi();
-	Mat draw_cells();
+	void draw_cells(Mat& voro);
 	
 private:
 	
