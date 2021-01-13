@@ -17,6 +17,8 @@ public:
 	std::vector<Point> vertex;
 	Scalar color;
 	std::vector<int> id_vertex;
+	
+	int get_update_id_vertex_origin(int k);
 };
 
 class voronoi
