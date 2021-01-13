@@ -16,7 +16,7 @@ public:
 	float py;
 	std::vector<Point> vertex;
 	Scalar color;
-	std::vector<int> id;
+	std::vector<int> id_vertex;
 };
 
 class voronoi
