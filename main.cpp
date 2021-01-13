@@ -40,6 +40,19 @@ int main()
     
     imshow("nodes apres resolution", graphe.draw_nodes(21));
     waitKey(0);
+    
+    voronoi voro = voronoi(image ,graphe.pixels_nodes, 20.0f);
+    voro.init_cells();
+    Mat img_voro = voro.draw_voronoi();
+    
+    imshow("voronoi pixel", img_voro);
+    waitKey(0);
+    
+    voro.compute_vertex();
+    img_voro= voro.draw_voronoi();
+    
+    imshow("voronoi cellules", img_voro);
+    waitKey(0);
 
     return 0;
 }
