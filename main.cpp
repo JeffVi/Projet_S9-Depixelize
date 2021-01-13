@@ -53,6 +53,11 @@ int main()
     
     imshow("voronoi cellules", img_voro);
     waitKey(0);
+    
+    voro.draw_cells(img_voro);
+    
+    imshow("voronoi contours cellules", img_voro);
+    waitKey(0);
 
     return 0;
 }
