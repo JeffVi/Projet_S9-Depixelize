@@ -305,3 +305,146 @@ void voronoi::draw_cells(Mat& voro)
 		polylines(voro,&ppt,&npt,1,true,Scalar(0,0,0));
 	}
 }
+
+void voronoi::polygon()
+{
+
+	std::vector<cell>::iterator it;
+	for (it = cells.begin(); it != cells.end(); it++)
+	{
+
+		bool segment = have_segment(*it);
+		if (!segment)
+		{
+
+			cell T_cell = *it;
+			polygons.push_back(T_cell);
+
+
+		}
+
+	}
+
+
+}
+
+bool voronoi::have_segment(cell cellule )
+{
+
+	std::vector<cell>::iterator it_poly;
+	int cpt = 0;
+
+	bool have_segment = false;
+
+	for (it_poly = polygons.begin(); it_poly != polygons.end(); it_poly++)
+	{
+		std::vector<Point>::iterator it_vertcell;
+		cell current_poly = *it_poly;
+
+		bool same_color = false;
+
+		if (same_color) {
+			for (it_vertcell = cellule.vertex.begin(); it_vertcell != cellule.vertex.end(); it_vertcell++)
+			{
+
+				Point current_vertcell = *it_vertcell;
+				std::vector<Point>::iterator it_vertpoly;
+
+
+				for (it_vertpoly = current_poly.vertex.begin(); it_vertpoly != current_poly.vertex.end(); it_vertpoly++)
+				{
+
+					Point current_vertpoly = *it_vertpoly;
+
+
+					if (current_vertcell == current_vertpoly)
+					{
+
+						Point next_vertcell;
+						Point next_vertpoly;
+
+						if (it_vertcell != cellule.vertex.begin())
+						{
+							next_vertcell = *(it_vertcell--);
+						}
+						else
+						{
+							next_vertcell = *(cellule.vertex.end()--);
+						}
+
+						if (it_vertpoly != current_poly.vertex.end()--)
+						{
+							next_vertpoly = *it_vertpoly++;
+						}
+						else
+						{
+							next_vertpoly = *current_poly.vertex.begin();
+						}
+
+						if (next_vertcell == next_vertpoly)
+						{
+
+							have_segment = true;
+
+							for (int i = 1; i < cellule.vertex.size() -1; i++)
+							{
+
+
+								if (it_vertcell + i >= cellule.vertex.end())
+								{
+									polygons[cpt].vertex.insert(it_vertpoly + i ,*( it_vertcell + i - cellule.vertex.size() ));
+								}
+								else
+								{
+
+									polygons[cpt].vertex.insert(it_vertpoly + i, *(it_vertcell + i ));
+
+								}
+							}
+
+						}
+
+
+					}
+
+
+				}
+
+
+			}
+		}
+		cpt++;
+	}
+
+	return have_segment;
+
+}
+
+
+bool voronoi::compare_color(Scalar color1, Scalar color2)
+{
+
+	bool dY;
+	bool dU;
+	bool dV;
+
+	Mat color1m = Mat (1,1,CV_8UC3,color1);
+	Mat color1mo;
+	Mat color2m = Mat(1, 1, CV_8UC3, color2);
+	Mat color2mo;
+
+	cvtColor(color1m, color1mo, COLOR_BGR2YUV);
+	cvtColor(color2m, color2mo, COLOR_BGR2YUV);
+
+	dY = color1m.at<Vec3b>(0,0)[0] - color2m.at<Vec3b>(0, 0)[0] > 48;
+	dU = color1m.at<Vec3b>(0, 0)[1] - color2m.at<Vec3b>(0, 0)[1] > 7;
+	dV= color1m.at<Vec3b>(0, 0)[2] - color2m.at<Vec3b>(0, 0)[2] > 6;
+
+	if (dY || dU || dV)
+	{
+		return false;
+	}
+
+	return true;
+
+}
