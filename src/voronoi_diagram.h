@@ -41,6 +41,7 @@ public:
 	Mat draw_voronoi();
 	void draw_cells(Mat& voro);
 	void draw_cells_union(Mat& voro);
+	void draw_cells_union(Mat& voro, int id_cell);
 
 private:
 
