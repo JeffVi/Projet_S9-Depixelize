@@ -15,7 +15,6 @@ public:
 
 	float px;
 	float py;
-	bool united = false;
 
 	std::vector<Point> vertex;
 	Scalar color;
@@ -31,7 +30,9 @@ public:
 
 	voronoi();
 	voronoi(Mat image, Mat pixels_nodes, float diagram_scale);
-
+	
+	std::vector<cell> polygons;
+	
 	void polygon();
 	bool have_segment(cell cellule);
 	void init_cells();
@@ -39,7 +40,7 @@ public:
 	bool compare_color(Scalar color1, Scalar color2);
 	Mat draw_voronoi();
 	void draw_cells(Mat& voro);
-	void draw_union_cells(Mat& voro);
+	void draw_cells_union(Mat& voro);
 
 private:
 
@@ -49,9 +50,11 @@ private:
 	Mat imagep;
 	Mat pixels_nodes_todo;
 	std::vector<cell> cells;
-	std::vector<cell> polygons;
-
+	std::vector<Point>::iterator it_p1;
+	std::vector<Point>::iterator it_p2;
+	
 	std::vector<int> get_cell_adj(int i, int j, int k);
+	int find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Point>::iterator it_vertcell, cell& poly, cell& cellule);
 };
 
 #endif
