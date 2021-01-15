@@ -61,7 +61,7 @@ int main()
     waitKey(0);
     
     voro.polygon();
-    voro.draw_cells_union(img_voro_union);
+    voro.draw_cells_union(img_voro_union,0);
     
     imshow("voronoi union cellules", img_voro_union);
     waitKey(0);
