@@ -308,10 +308,12 @@ void voronoi::draw_cells(Mat& voro)
 
 void voronoi::polygon()
 {
-
 	std::vector<cell>::iterator it;
 	for (it = cells.begin(); it != cells.end(); it++)
 	{
+
+
+		std::cout << "test" << std::endl;
 
 		bool segment = have_segment(*it);
 		if (!segment)
@@ -319,12 +321,13 @@ void voronoi::polygon()
 
 			cell T_cell = *it;
 			polygons.push_back(T_cell);
+			
 
 
 		}
 
 	}
-
+	std::cout << "end" << std::endl;
 
 }
 
@@ -334,73 +337,90 @@ bool voronoi::have_segment(cell cellule )
 	std::vector<cell>::iterator it_poly;
 	int cpt = 0;
 
+	if (polygons.size() == 0)return false;
+
 	bool have_segment = false;
 
 	for (it_poly = polygons.begin(); it_poly != polygons.end(); it_poly++)
 	{
 		std::vector<Point>::iterator it_vertcell;
-		cell current_poly = *it_poly;
 
-		bool same_color = false;
+		bool same_color = compare_color(polygons[cpt].color,cellule.color);
 
 		if (same_color) {
+			//int indice_vertcell = 0;
 			for (it_vertcell = cellule.vertex.begin(); it_vertcell != cellule.vertex.end(); it_vertcell++)
 			{
-
+				//indice_vertcell ++;
+				//int indice_vertpoly = 0;
 				Point current_vertcell = *it_vertcell;
 				std::vector<Point>::iterator it_vertpoly;
 
 
-				for (it_vertpoly = current_poly.vertex.begin(); it_vertpoly != current_poly.vertex.end(); it_vertpoly++)
+				for (it_vertpoly = polygons[cpt].vertex.begin(); it_vertpoly != polygons[cpt].vertex.end(); it_vertpoly++)
 				{
 
+					//indice_vertpoly++;
 					Point current_vertpoly = *it_vertpoly;
 
-
+					
 					if (current_vertcell == current_vertpoly)
 					{
-
+						
 						Point next_vertcell;
 						Point next_vertpoly;
 
 						if (it_vertcell != cellule.vertex.begin())
 						{
-							next_vertcell = *(it_vertcell--);
+							next_vertcell = *(it_vertcell-1);
 						}
+						
 						else
 						{
-							next_vertcell = *(cellule.vertex.end()--);
+							next_vertcell = *(cellule.vertex.end()-1);
 						}
 
-						if (it_vertpoly != current_poly.vertex.end()--)
+					
+						if (it_vertpoly != polygons[cpt].vertex.end()-1)
 						{
-							next_vertpoly = *it_vertpoly++;
+							next_vertpoly = *(it_vertpoly+1);
 						}
 						else
 						{
-							next_vertpoly = *current_poly.vertex.begin();
+							next_vertpoly = *polygons[cpt].vertex.begin();
 						}
+						
+						
 
 						if (next_vertcell == next_vertpoly)
 						{
 
 							have_segment = true;
 
-							for (int i = 1; i < cellule.vertex.size() -1; i++)
+
+							std::cout << polygons[cpt].vertex.size() << std::endl;
+
+							for (int i = 1; i < cellule.vertex.size() - 1; i++)
 							{
 
 
 								if (it_vertcell + i >= cellule.vertex.end())
 								{
-									polygons[cpt].vertex.insert(it_vertpoly + i ,*( it_vertcell + i - cellule.vertex.size() ));
+
+									polygons[cpt].vertex.insert(it_vertpoly + i -1, *(it_vertcell + i - cellule.vertex.size()));
+
 								}
 								else
 								{
 
-									polygons[cpt].vertex.insert(it_vertpoly + i, *(it_vertcell + i ));
+									polygons[cpt].vertex.insert(it_vertpoly + i -1, *(it_vertcell + i));
 
 								}
 							}
+									
+
+
+							
 
 						}
 
