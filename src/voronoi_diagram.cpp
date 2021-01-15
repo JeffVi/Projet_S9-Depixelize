@@ -321,6 +321,17 @@ void voronoi::draw_cells_union(Mat& voro)
 	}
 }
 
+void voronoi::draw_cells_union(Mat& voro, int id_cell)
+{
+	voro = voro + Scalar(100,100,100);//pour mieux voir les lignes noires
+	
+	cell poly = polygons[id_cell];
+	std::vector<Point> vertex_list = poly.vertex;
+	const int npt = vertex_list.size();
+	const Point* ppt = &vertex_list[0];
+	fillPoly(voro,&ppt,&npt,1,Scalar(0,0,0));
+}
+
 void voronoi::polygon()
 {
 	std::vector<cell>::iterator it;
@@ -329,12 +340,8 @@ void voronoi::polygon()
 		bool segment = have_segment(*it);
 		if (!segment)
 		{
-
 			cell T_cell = *it;
 			polygons.push_back(T_cell);
-			
-
-
 		}
 
 	}
@@ -387,8 +394,16 @@ bool voronoi::have_segment(cell cellule )
 						
 						case 1:
 						have_segment = true;
+						std::cout<<"it_vertpoly : "<<*it_vertpoly<<std::endl;
+						std::cout<<"it_vertcell : "<<*it_vertcell<<std::endl;
 						while(it_p1 != it_vertcell)
 						{
+							cell_poly.vertex.insert(it_vertpoly,*it_p1);
+							indice_vertpoly++;
+							it_vertpoly = cell_poly.vertex.begin() + indice_vertpoly;
+							std::cout<<"it_vertpoly inter : "<<*it_vertpoly<<std::endl;
+							std::cout<<"it_p1 : "<<*it_p1<<std::endl;
+							
 							if (it_p1 != cellule.vertex.end()-1)
 							{
 								it_p1++;
@@ -397,20 +412,25 @@ bool voronoi::have_segment(cell cellule )
 							{
 								it_p1 = cellule.vertex.begin();
 							}
-							cell_poly.vertex.insert(it_vertpoly,*it_p1);
-							it_vertpoly = cell_poly.vertex.begin() + indice_vertpoly;
-							std::cout<<"it_vertpoly : "<<*it_vertpoly<<std::endl;
-							indice_vertpoly++;
 						}
-						
+						std::cout<<"it_p1 non mis : "<<*it_p1<<std::endl;
+						std::cout<<"it_vertpoly final : "<<*it_vertpoly<<std::endl;
 						break;
 						
 						case 2:
 						have_segment = true;
+						std::cout<<"it_vertpoly : "<<*it_vertpoly<<std::endl;
+						std::cout<<"it_vertcell : "<<*it_vertcell<<std::endl;
 						int indice_it_p2 = indice_vertpoly - 1;
 						
 						while(it_p1 != it_vertcell)
 						{
+							cell_poly.vertex.insert(it_vertpoly,*it_p1);
+							indice_vertpoly++;
+							it_vertpoly = cell_poly.vertex.begin() + indice_vertpoly;
+							std::cout<<"it_p1 : "<<*it_p1<<std::endl;
+							std::cout<<"it_vertpoly inter : "<<*it_vertpoly<<std::endl;
+							
 							if (it_p1 != cellule.vertex.end()-1)
 							{
 								it_p1++;
@@ -420,9 +440,6 @@ bool voronoi::have_segment(cell cellule )
 								it_p1 = cellule.vertex.begin();
 							}
 							
-							cell_poly.vertex.insert(it_vertpoly,*it_p1);
-							it_vertpoly = cell_poly.vertex.begin() + indice_vertpoly;
-							indice_vertpoly++;
 						}
 						
 						if (indice_it_p2 < 0)
@@ -433,8 +450,8 @@ bool voronoi::have_segment(cell cellule )
 						{
 							cell_poly.vertex.erase(cell_poly.vertex.begin() + indice_it_p2);
 						}
-						
-						
+						std::cout<<"it_p1 non mis : "<<*it_p1<<std::endl;
+						std::cout<<"it_vertpoly final : "<<*it_vertpoly<<std::endl;
 						break;
 						
 					}
@@ -454,7 +471,7 @@ int voronoi::find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Poi
 	it_p1 = it_vertcell;
 	it_p2 = it_vertpoly;
 	double dP = norm(*it_p1 - *it_p2);
-	int cpt = 0;
+	int cpt = -1;
 	while(dP < 0.05f)
 	{
 		if (it_p1 != cellule.vertex.end()-1)
@@ -479,7 +496,7 @@ int voronoi::find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Poi
 		cpt++;
 		
 		//if(cpt>10){break;}
-	}/*
+	}
 	if (it_p2 != poly.vertex.end()-1)
 	{
 		it_p2++;
@@ -496,8 +513,8 @@ int voronoi::find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Poi
 	else
 	{
 		it_p1 = cellule.vertex.end()-1;
-	}*/
-	if(cpt!=0){std::cout<<cpt<<std::endl;}
+	}
+	if(cpt>0){std::cout<<cpt<<std::endl;}
 	
 	return cpt;
 }
