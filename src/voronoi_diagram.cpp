@@ -312,6 +312,7 @@ Mat voronoi::draw_cells_union()
 	
 	std::vector<cell>::iterator it;
 	Scalar color_union = Scalar(0,0,0);
+	
 	for(it=polygons.begin(); it!=polygons.end(); it++)
 	{
 		color_union = color_union + Scalar(5,5,5); //max 51 cellules
@@ -623,4 +624,94 @@ bool voronoi::compare_color(const Scalar& color1, const Scalar& color2)
 	
 	return (dR && dG && dB);
 
+}
+
+void voronoi::union_poly()
+{
+	std::vector<cell>::iterator it_poly_1;
+	std::vector<cell>::iterator it_poly_2;
+	int indice_poly_1 = -1;
+	bool edge_found = false;
+	
+	for(it_poly_1 = polygons.begin(); it_poly_1 != polygons.end() - 1; it_poly_1++)
+	{
+		cell poly_1 = *it_poly_1;
+		indice_poly_1++;
+		int indice_poly_2 = indice_poly_1;
+		
+		//std::cout<<"*****indice_poly_1 : "<<indice_poly_1<<std::endl;
+		
+		for(it_poly_2 = polygons.begin() + indice_poly_1 + 1; it_poly_2 != polygons.end(); it_poly_2++)
+		{
+			cell poly_2 = *it_poly_2;
+			indice_poly_2++;
+			
+			//std::cout<<"indice_poly_2 : "<<indice_poly_2<<std::endl;
+			
+			edge_found = false;
+			
+			if(compare_color(poly_1.color, poly_2.color))
+			{
+				std::vector<Point>::iterator it_vertpoly_1;
+				std::vector<Point>::iterator it_vertpoly_2;
+				int indice_vertpoly_1 = -1;
+				
+				for(it_vertpoly_1 = poly_1.vertex.begin(); it_vertpoly_1 != poly_1.vertex.end(); it_vertpoly_1++)
+				{
+					indice_vertpoly_1++;
+					for(it_vertpoly_2 = poly_2.vertex.begin(); it_vertpoly_2 != poly_2.vertex.end(); it_vertpoly_2++)
+					{
+						int nbr_edges = find_edge(it_vertpoly_1,it_vertpoly_2,poly_1,poly_2,indice_vertpoly_1);
+						
+						if(nbr_edges >= 1)
+						{
+							//std::cout<<"###edge found !"<<std::endl;
+							
+							edge_found = true;
+							int indice_it_p2 = indice_vertpoly_1 - nbr_edges + 1;
+							int nbr_ajouts = 0;
+							while(it_p1 != it_vertpoly_2)
+							{
+								//std::cout<<"it_vertpoly avant ajout : "<<*it_vertpoly_1<<std::endl;
+								
+								poly_1.vertex.insert(it_vertpoly_1,*it_p1);
+								nbr_ajouts++;
+								
+								indice_vertpoly_1++;
+								it_vertpoly_1 = poly_1.vertex.begin() + indice_vertpoly_1;
+								
+								if (it_p1 != poly_2.vertex.end()-1)
+								{
+									it_p1++;
+								}
+								else
+								{
+									it_p1 = poly_2.vertex.begin();
+								}
+							}
+							
+							//std::cout<<"cell apres ajouts : "<<std::endl;
+							//print_cell(poly_1);
+							
+							if(nbr_edges > 1)
+							{
+								poly_1.vertex.erase(poly_1.vertex.begin() + indice_it_p2, poly_1.vertex.begin() + indice_vertpoly_1 - nbr_ajouts);
+								
+							}
+							
+							*it_poly_1 = poly_1;
+							polygons.erase(it_poly_2);
+							it_poly_1 = polygons.begin() + indice_poly_1;
+							it_poly_2 = polygons.begin() + indice_poly_1;
+							
+							//std::cout<<"nombre polys : "<<polygons.size()<<std::endl;
+							
+							break;
+						}
+					}
+					if(edge_found){break;}
+				}
+			}
+		}
+	}
 }
