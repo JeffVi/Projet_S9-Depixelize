@@ -305,3 +305,413 @@ void voronoi::draw_cells(Mat& voro)
 		polylines(voro,&ppt,&npt,1,true,Scalar(0,0,0));
 	}
 }
+
+Mat voronoi::draw_cells_union()
+{
+	Mat voro = Mat(rows*ceil(scale),cols*ceil(scale),CV_8UC3,Scalar(255,255,255));
+	
+	std::vector<cell>::iterator it;
+	Scalar color_union = Scalar(0,0,0);
+	
+	for(it=polygons.begin(); it!=polygons.end(); it++)
+	{
+		color_union = color_union + Scalar(5,5,5); //max 51 cellules
+		cell poly = *it;
+		std::vector<Point> vertex_list = poly.vertex;
+		const int npt = vertex_list.size();
+		const Point* ppt = &vertex_list[0];
+		fillPoly(voro,&ppt,&npt,1,color_union);
+	}
+	return voro;
+}
+
+void voronoi::draw_cells_union(Mat& voro)
+{
+	std::vector<cell>::iterator it;
+	voro = voro + Scalar(100,100,100);//pour mieux voir les lignes noires
+	
+	for(it=polygons.begin(); it!=polygons.end(); it++)
+	{
+		
+		cell poly = *it;
+		std::vector<Point> vertex_list = poly.vertex;
+		const int npt = vertex_list.size();
+		const Point* ppt = &vertex_list[0];
+		polylines(voro,&ppt,&npt,1,true,Scalar(0,0,0));
+	}
+}
+
+void voronoi::draw_cells_union(Mat& voro, int id_cell)
+{
+	voro = voro + Scalar(100,100,100);//pour mieux voir les lignes noires
+	
+	cell poly = polygons[id_cell];
+	std::vector<Point> vertex_list = poly.vertex;
+	const int npt = vertex_list.size();
+	const Point* ppt = &vertex_list[0];
+	fillPoly(voro,&ppt,&npt,1,Scalar(0,0,0));
+}
+
+void voronoi::print_cell(cell cellule)
+{
+	std::vector<Point>::iterator it_vertcell;
+	for (it_vertcell = cellule.vertex.begin(); it_vertcell != cellule.vertex.end(); it_vertcell++)
+	{
+		std::cout<<*it_vertcell<<std::endl;
+	}
+}
+
+void voronoi::polygon()
+{
+	std::vector<cell>::iterator it;
+	for (it = cells.begin(); it != cells.end(); it++)
+	{
+		bool segment = have_segment(*it);
+		if (!segment)
+		{
+			cell T_cell = *it;
+			polygons.push_back(T_cell);
+		}
+
+	}
+
+}
+
+void voronoi::polygon(int nbr_cells)
+{
+	int cpt = 0;
+	std::vector<cell>::iterator it;
+	for (it = cells.begin(); it != cells.end(); it++)
+	{
+		bool segment = have_segment(*it);
+		if (!segment)
+		{
+			cell T_cell = *it;
+			polygons.push_back(T_cell);
+		}
+	cpt++;
+	if(cpt == nbr_cells){break;}
+	}
+
+}
+
+bool voronoi::have_segment(cell cellule )
+{
+
+	std::vector<cell>::iterator it_poly;
+
+	if (polygons.size() == 0)return false;
+
+	bool have_segment = false;
+
+	for (it_poly = polygons.begin(); it_poly != polygons.end(); it_poly++)
+	{
+		std::vector<Point>::iterator it_vertcell;
+		
+		cell cell_poly = *it_poly;
+
+		bool same_color = compare_color(cell_poly.color,cellule.color);
+
+		if (same_color) {
+		
+			for (it_vertcell = cellule.vertex.begin(); it_vertcell != cellule.vertex.end(); it_vertcell++)
+			{
+				std::vector<Point>::iterator it_vertpoly;
+				int indice_vertpoly = -1;
+				
+				for (it_vertpoly = cell_poly.vertex.begin(); it_vertpoly != cell_poly.vertex.end(); it_vertpoly++)
+				{
+
+					indice_vertpoly++;
+					
+					int nbr_edges = find_edge(it_vertpoly,it_vertcell,cell_poly,cellule,indice_vertpoly);
+					//cellule : de droite a gauche
+					//poly : de gauche a droite
+					
+					//it_vertcell -> début du segment cellule
+					//it_vertpoly -> fin du segment poly
+					//it_p1 -> fin du segment cellule + 1
+					//it_p2 -> début du segment poly
+					
+					if(nbr_edges >= 1)
+					{
+						have_segment = true;
+						int indice_it_p2 = indice_vertpoly - nbr_edges + 1;
+						int nbr_ajouts = 0;
+						while(it_p1 != it_vertcell)
+						{
+							//std::cout<<"it_vertpoly avant ajout : "<<*it_vertpoly<<std::endl;
+							
+							cell_poly.vertex.insert(it_vertpoly,*it_p1);
+							nbr_ajouts++;
+							
+							//std::cout<<"it_p1 ajouté : "<<*it_p1<<std::endl;
+							
+							indice_vertpoly++;
+							it_vertpoly = cell_poly.vertex.begin() + indice_vertpoly;
+							
+							//std::cout<<"it_vertpoly apres ajout : "<<*it_vertpoly<<std::endl;
+							
+							if (it_p1 != cellule.vertex.end()-1)
+							{
+								it_p1++;
+							}
+							else
+							{
+								it_p1 = cellule.vertex.begin();
+							}
+						}
+						
+						//std::cout<<"cell apres ajouts : "<<std::endl;
+						//print_cell(cell_poly);
+						
+						if(nbr_edges > 1)
+						{
+							//Point p_sup1 = *(cell_poly.vertex.begin() + indice_it_p2);
+							//Point p_sup2 = *(cell_poly.vertex.begin() + indice_vertpoly - nbr_ajouts);
+							//std::cout<<"vertpoly supprimé début : "<<p_sup1<<std::endl;
+							//std::cout<<"vertpoly supprimé fin : "<<p_sup2<<std::endl;
+							
+							cell_poly.vertex.erase(cell_poly.vertex.begin() + indice_it_p2, cell_poly.vertex.begin() + indice_vertpoly - nbr_ajouts);
+							
+							//std::cout<<"cell fin iter : "<<std::endl;
+							//print_cell(cell_poly);
+						}
+					}
+					
+					*it_poly = cell_poly;
+					if(have_segment){return true;}
+				}
+			}
+		}
+	}
+
+	return have_segment;
+
+}
+
+int voronoi::find_edge(std::vector<Point>::iterator& it_vertpoly, std::vector<Point>::iterator& it_vertcell, cell& poly, cell& cellule, int& indice_vertpoly)
+{
+	int cpt = -1;
+	it_p1 = it_vertcell;
+	it_p2 = it_vertpoly;
+	double dP = norm(*it_p1 - *it_p2);
+	float seuil = 0.05f;
+	if(dP >= seuil){return cpt;}
+	
+	//std::cout<<std::endl<<std::endl;
+	//std::cout<<"it_vertcell : "<<*it_vertcell<<std::endl;
+	//std::cout<<"it_vertpoly : "<<*it_vertpoly<<std::endl;
+	
+	//Sens trigo
+	while(dP < seuil)
+	{
+		if (it_p2 != poly.vertex.end()-1)
+		{
+			it_p2++;
+		}
+		else
+		{
+			it_p2 = poly.vertex.begin();
+		}
+
+		if (it_p1 != cellule.vertex.begin())
+		{
+			it_p1--;
+		}
+		else
+		{
+			it_p1 = cellule.vertex.end()-1;
+		}
+		
+		dP = norm(*it_p1 - *it_p2);
+		indice_vertpoly++;
+		
+		//std::cout<<"boucle trigo"<<std::endl;
+		//std::cout<<"it_p1 : "<<*it_p1<<std::endl;
+		//std::cout<<"it_p2 : "<<*it_p2<<std::endl;
+	}
+	
+	if (it_p1 != cellule.vertex.end()-1)
+	{
+		it_p1++;
+	}
+	else
+	{
+		it_p1 = cellule.vertex.begin();
+	}
+
+	if (it_p2 != poly.vertex.begin())
+	{
+		it_p2--;
+	}
+	else
+	{
+		it_p2 = poly.vertex.end()-1;
+	}
+	
+	indice_vertpoly--;
+	it_vertcell = it_p1;
+	it_vertpoly = it_p2;
+	dP = norm(*it_p1 - *it_p2);
+		
+	//Sens horaire
+	while(dP < seuil)
+	{
+		if (it_p1 != cellule.vertex.end()-1)
+		{
+			it_p1++;
+		}
+		else
+		{
+			it_p1 = cellule.vertex.begin();
+		}
+
+		if (it_p2 != poly.vertex.begin())
+		{
+			it_p2--;
+		}
+		else
+		{
+			it_p2 = poly.vertex.end()-1;
+		}
+		
+		dP = norm(*it_p1 - *it_p2);
+		cpt++;
+		
+		//std::cout<<"boucle horaire"<<std::endl;
+		//std::cout<<"it_p1 : "<<*it_p1<<std::endl;
+		//std::cout<<"it_p2 : "<<*it_p2<<std::endl;
+	}
+	
+	if (it_p2 != poly.vertex.end()-1)
+	{
+		it_p2++;
+	}
+	else
+	{
+		it_p2 = poly.vertex.begin();
+	}
+	
+	//if(cpt>0){std::cout<<"nbr segments : "<<cpt<<std::endl;}
+	
+	//std::cout<<"it_p1 fin : "<<*it_p1<<std::endl;
+	//std::cout<<"it_p2 fin : "<<*it_p2<<std::endl;
+	
+	//std::cout<<"it_vertcell fin : "<<*it_vertcell<<std::endl;
+	//std::cout<<"it_vertpoly fin : "<<*it_vertpoly<<std::endl;
+	
+	return cpt;
+}
+
+bool voronoi::compare_color(const Scalar& color1, const Scalar& color2)
+{
+
+	bool dB;
+	bool dG;
+	bool dR;
+	
+	int R1 = color1[2];
+	int G1 = color1[1];
+	int B1 = color1[0];
+	int R2 = color2[2];
+	int G2 = color2[1];
+	int B2 = color2[0];
+	
+	dR = abs(R1-R2)<20;
+	dG = abs(G1-G2)<20;
+	dB = abs(B1-B2)<20;
+	
+	return (dR && dG && dB);
+
+}
+
+void voronoi::union_poly()
+{
+	std::vector<cell>::iterator it_poly_1;
+	std::vector<cell>::iterator it_poly_2;
+	int indice_poly_1 = -1;
+	bool edge_found = false;
+	
+	for(it_poly_1 = polygons.begin(); it_poly_1 != polygons.end() - 1; it_poly_1++)
+	{
+		cell poly_1 = *it_poly_1;
+		indice_poly_1++;
+		int indice_poly_2 = indice_poly_1;
+		
+		//std::cout<<"*****indice_poly_1 : "<<indice_poly_1<<std::endl;
+		
+		for(it_poly_2 = polygons.begin() + indice_poly_1 + 1; it_poly_2 != polygons.end(); it_poly_2++)
+		{
+			cell poly_2 = *it_poly_2;
+			indice_poly_2++;
+			
+			//std::cout<<"indice_poly_2 : "<<indice_poly_2<<std::endl;
+			
+			edge_found = false;
+			
+			if(compare_color(poly_1.color, poly_2.color))
+			{
+				std::vector<Point>::iterator it_vertpoly_1;
+				std::vector<Point>::iterator it_vertpoly_2;
+				int indice_vertpoly_1 = -1;
+				
+				for(it_vertpoly_1 = poly_1.vertex.begin(); it_vertpoly_1 != poly_1.vertex.end(); it_vertpoly_1++)
+				{
+					indice_vertpoly_1++;
+					for(it_vertpoly_2 = poly_2.vertex.begin(); it_vertpoly_2 != poly_2.vertex.end(); it_vertpoly_2++)
+					{
+						int nbr_edges = find_edge(it_vertpoly_1,it_vertpoly_2,poly_1,poly_2,indice_vertpoly_1);
+						
+						if(nbr_edges >= 1)
+						{
+							//std::cout<<"###edge found !"<<std::endl;
+							
+							edge_found = true;
+							int indice_it_p2 = indice_vertpoly_1 - nbr_edges + 1;
+							int nbr_ajouts = 0;
+							while(it_p1 != it_vertpoly_2)
+							{
+								//std::cout<<"it_vertpoly avant ajout : "<<*it_vertpoly_1<<std::endl;
+								
+								poly_1.vertex.insert(it_vertpoly_1,*it_p1);
+								nbr_ajouts++;
+								
+								indice_vertpoly_1++;
+								it_vertpoly_1 = poly_1.vertex.begin() + indice_vertpoly_1;
+								
+								if (it_p1 != poly_2.vertex.end()-1)
+								{
+									it_p1++;
+								}
+								else
+								{
+									it_p1 = poly_2.vertex.begin();
+								}
+							}
+							
+							//std::cout<<"cell apres ajouts : "<<std::endl;
+							//print_cell(poly_1);
+							
+							if(nbr_edges > 1)
+							{
+								poly_1.vertex.erase(poly_1.vertex.begin() + indice_it_p2, poly_1.vertex.begin() + indice_vertpoly_1 - nbr_ajouts);
+								
+							}
+							
+							*it_poly_1 = poly_1;
+							polygons.erase(it_poly_2);
+							it_poly_1 = polygons.begin() + indice_poly_1;
+							it_poly_2 = polygons.begin() + indice_poly_1;
+							
+							//std::cout<<"nombre polys : "<<polygons.size()<<std::endl;
+							
+							break;
+						}
+					}
+					if(edge_found){break;}
+				}
+			}
+		}
+	}
+}
