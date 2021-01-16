@@ -34,14 +34,17 @@ public:
 	std::vector<cell> polygons;
 	
 	void polygon();
+	void polygon(int nbr_cells);
 	bool have_segment(cell cellule);
 	void init_cells();
 	void compute_vertex();
-	bool compare_color(Scalar color1, Scalar color2);
+	bool compare_color(const Scalar& color1, const Scalar& color2);
 	Mat draw_voronoi();
 	void draw_cells(Mat& voro);
+	Mat draw_cells_union();
 	void draw_cells_union(Mat& voro);
 	void draw_cells_union(Mat& voro, int id_cell);
+	void print_cell(cell cellule);
 
 private:
 
@@ -55,7 +58,7 @@ private:
 	std::vector<Point>::iterator it_p2;
 	
 	std::vector<int> get_cell_adj(int i, int j, int k);
-	int find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Point>::iterator it_vertcell, cell& poly, cell& cellule);
+	int find_edge(std::vector<Point>::iterator& it_vertpoly, std::vector<Point>::iterator& it_vertcell, cell& poly, cell& cellule, int& indice_vertpoly);
 };
 
 #endif
