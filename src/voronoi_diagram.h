@@ -35,6 +35,7 @@ public:
 	
 	void polygon();
 	void polygon(int nbr_cells);
+	void union_poly();
 	bool have_segment(cell cellule);
 	void init_cells();
 	void compute_vertex();
