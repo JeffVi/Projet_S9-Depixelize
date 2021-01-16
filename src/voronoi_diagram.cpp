@@ -306,6 +306,24 @@ void voronoi::draw_cells(Mat& voro)
 	}
 }
 
+Mat voronoi::draw_cells_union()
+{
+	Mat voro = Mat(rows*ceil(scale),cols*ceil(scale),CV_8UC3,Scalar(255,255,255));
+	
+	std::vector<cell>::iterator it;
+	Scalar color_union = Scalar(0,0,0);
+	for(it=polygons.begin(); it!=polygons.end(); it++)
+	{
+		color_union = color_union + Scalar(5,5,5); //max 51 cellules
+		cell poly = *it;
+		std::vector<Point> vertex_list = poly.vertex;
+		const int npt = vertex_list.size();
+		const Point* ppt = &vertex_list[0];
+		fillPoly(voro,&ppt,&npt,1,color_union);
+	}
+	return voro;
+}
+
 void voronoi::draw_cells_union(Mat& voro)
 {
 	std::vector<cell>::iterator it;
@@ -313,6 +331,7 @@ void voronoi::draw_cells_union(Mat& voro)
 	
 	for(it=polygons.begin(); it!=polygons.end(); it++)
 	{
+		
 		cell poly = *it;
 		std::vector<Point> vertex_list = poly.vertex;
 		const int npt = vertex_list.size();
@@ -332,6 +351,15 @@ void voronoi::draw_cells_union(Mat& voro, int id_cell)
 	fillPoly(voro,&ppt,&npt,1,Scalar(0,0,0));
 }
 
+void voronoi::print_cell(cell cellule)
+{
+	std::vector<Point>::iterator it_vertcell;
+	for (it_vertcell = cellule.vertex.begin(); it_vertcell != cellule.vertex.end(); it_vertcell++)
+	{
+		std::cout<<*it_vertcell<<std::endl;
+	}
+}
+
 void voronoi::polygon()
 {
 	std::vector<cell>::iterator it;
@@ -344,6 +372,24 @@ void voronoi::polygon()
 			polygons.push_back(T_cell);
 		}
 
+	}
+
+}
+
+void voronoi::polygon(int nbr_cells)
+{
+	int cpt = 0;
+	std::vector<cell>::iterator it;
+	for (it = cells.begin(); it != cells.end(); it++)
+	{
+		bool segment = have_segment(*it);
+		if (!segment)
+		{
+			cell T_cell = *it;
+			polygons.push_back(T_cell);
+		}
+	cpt++;
+	if(cpt == nbr_cells){break;}
 	}
 
 }
@@ -376,33 +422,34 @@ bool voronoi::have_segment(cell cellule )
 				{
 
 					indice_vertpoly++;
-					Point current_vertpoly = *it_vertpoly;
 					
-					int nbr_edges = find_edge(it_vertpoly,it_vertcell,cell_poly,cellule);
+					int nbr_edges = find_edge(it_vertpoly,it_vertcell,cell_poly,cellule,indice_vertpoly);
 					//cellule : de droite a gauche
 					//poly : de gauche a droite
 					
 					//it_vertcell -> début du segment cellule
 					//it_vertpoly -> fin du segment poly
-					//it_p1 -> fin du segment cellule
+					//it_p1 -> fin du segment cellule + 1
 					//it_p2 -> début du segment poly
 					
-					switch(nbr_edges)
+					if(nbr_edges >= 1)
 					{
-						case 0:
-						break;
-						
-						case 1:
 						have_segment = true;
-						std::cout<<"it_vertpoly : "<<*it_vertpoly<<std::endl;
-						std::cout<<"it_vertcell : "<<*it_vertcell<<std::endl;
+						int indice_it_p2 = indice_vertpoly - nbr_edges + 1;
+						int nbr_ajouts = 0;
 						while(it_p1 != it_vertcell)
 						{
+							//std::cout<<"it_vertpoly avant ajout : "<<*it_vertpoly<<std::endl;
+							
 							cell_poly.vertex.insert(it_vertpoly,*it_p1);
+							nbr_ajouts++;
+							
+							//std::cout<<"it_p1 ajouté : "<<*it_p1<<std::endl;
+							
 							indice_vertpoly++;
 							it_vertpoly = cell_poly.vertex.begin() + indice_vertpoly;
-							std::cout<<"it_vertpoly inter : "<<*it_vertpoly<<std::endl;
-							std::cout<<"it_p1 : "<<*it_p1<<std::endl;
+							
+							//std::cout<<"it_vertpoly apres ajout : "<<*it_vertpoly<<std::endl;
 							
 							if (it_p1 != cellule.vertex.end()-1)
 							{
@@ -413,48 +460,24 @@ bool voronoi::have_segment(cell cellule )
 								it_p1 = cellule.vertex.begin();
 							}
 						}
-						std::cout<<"it_p1 non mis : "<<*it_p1<<std::endl;
-						std::cout<<"it_vertpoly final : "<<*it_vertpoly<<std::endl;
-						break;
 						
-						case 2:
-						have_segment = true;
-						std::cout<<"it_vertpoly : "<<*it_vertpoly<<std::endl;
-						std::cout<<"it_vertcell : "<<*it_vertcell<<std::endl;
-						int indice_it_p2 = indice_vertpoly - 1;
+						//std::cout<<"cell apres ajouts : "<<std::endl;
+						//print_cell(cell_poly);
 						
-						while(it_p1 != it_vertcell)
+						if(nbr_edges > 1)
 						{
-							cell_poly.vertex.insert(it_vertpoly,*it_p1);
-							indice_vertpoly++;
-							it_vertpoly = cell_poly.vertex.begin() + indice_vertpoly;
-							std::cout<<"it_p1 : "<<*it_p1<<std::endl;
-							std::cout<<"it_vertpoly inter : "<<*it_vertpoly<<std::endl;
+							//Point p_sup1 = *(cell_poly.vertex.begin() + indice_it_p2);
+							//Point p_sup2 = *(cell_poly.vertex.begin() + indice_vertpoly - nbr_ajouts);
+							//std::cout<<"vertpoly supprimé début : "<<p_sup1<<std::endl;
+							//std::cout<<"vertpoly supprimé fin : "<<p_sup2<<std::endl;
 							
-							if (it_p1 != cellule.vertex.end()-1)
-							{
-								it_p1++;
-							}
-							else
-							{
-								it_p1 = cellule.vertex.begin();
-							}
+							cell_poly.vertex.erase(cell_poly.vertex.begin() + indice_it_p2, cell_poly.vertex.begin() + indice_vertpoly - nbr_ajouts);
 							
+							//std::cout<<"cell fin iter : "<<std::endl;
+							//print_cell(cell_poly);
 						}
-						
-						if (indice_it_p2 < 0)
-						{
-							cell_poly.vertex.erase(cell_poly.vertex.end()-1);
-						}
-						else
-						{
-							cell_poly.vertex.erase(cell_poly.vertex.begin() + indice_it_p2);
-						}
-						std::cout<<"it_p1 non mis : "<<*it_p1<<std::endl;
-						std::cout<<"it_vertpoly final : "<<*it_vertpoly<<std::endl;
-						break;
-						
 					}
+					
 					*it_poly = cell_poly;
 					if(have_segment){return true;}
 				}
@@ -466,13 +489,73 @@ bool voronoi::have_segment(cell cellule )
 
 }
 
-int voronoi::find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Point>::iterator it_vertcell, cell& poly, cell& cellule)
+int voronoi::find_edge(std::vector<Point>::iterator& it_vertpoly, std::vector<Point>::iterator& it_vertcell, cell& poly, cell& cellule, int& indice_vertpoly)
 {
+	int cpt = -1;
 	it_p1 = it_vertcell;
 	it_p2 = it_vertpoly;
 	double dP = norm(*it_p1 - *it_p2);
-	int cpt = -1;
-	while(dP < 0.05f)
+	float seuil = 0.05f;
+	if(dP >= seuil){return cpt;}
+	
+	//std::cout<<std::endl<<std::endl;
+	//std::cout<<"it_vertcell : "<<*it_vertcell<<std::endl;
+	//std::cout<<"it_vertpoly : "<<*it_vertpoly<<std::endl;
+	
+	//Sens trigo
+	while(dP < seuil)
+	{
+		if (it_p2 != poly.vertex.end()-1)
+		{
+			it_p2++;
+		}
+		else
+		{
+			it_p2 = poly.vertex.begin();
+		}
+
+		if (it_p1 != cellule.vertex.begin())
+		{
+			it_p1--;
+		}
+		else
+		{
+			it_p1 = cellule.vertex.end()-1;
+		}
+		
+		dP = norm(*it_p1 - *it_p2);
+		indice_vertpoly++;
+		
+		//std::cout<<"boucle trigo"<<std::endl;
+		//std::cout<<"it_p1 : "<<*it_p1<<std::endl;
+		//std::cout<<"it_p2 : "<<*it_p2<<std::endl;
+	}
+	
+	if (it_p1 != cellule.vertex.end()-1)
+	{
+		it_p1++;
+	}
+	else
+	{
+		it_p1 = cellule.vertex.begin();
+	}
+
+	if (it_p2 != poly.vertex.begin())
+	{
+		it_p2--;
+	}
+	else
+	{
+		it_p2 = poly.vertex.end()-1;
+	}
+	
+	indice_vertpoly--;
+	it_vertcell = it_p1;
+	it_vertpoly = it_p2;
+	dP = norm(*it_p1 - *it_p2);
+		
+	//Sens horaire
+	while(dP < seuil)
 	{
 		if (it_p1 != cellule.vertex.end()-1)
 		{
@@ -495,8 +578,11 @@ int voronoi::find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Poi
 		dP = norm(*it_p1 - *it_p2);
 		cpt++;
 		
-		//if(cpt>10){break;}
+		//std::cout<<"boucle horaire"<<std::endl;
+		//std::cout<<"it_p1 : "<<*it_p1<<std::endl;
+		//std::cout<<"it_p2 : "<<*it_p2<<std::endl;
 	}
+	
 	if (it_p2 != poly.vertex.end()-1)
 	{
 		it_p2++;
@@ -505,44 +591,36 @@ int voronoi::find_edge(std::vector<Point>::iterator it_vertpoly, std::vector<Poi
 	{
 		it_p2 = poly.vertex.begin();
 	}
-
-	if (it_p1 != cellule.vertex.begin())
-	{
-		it_p1--;
-	}
-	else
-	{
-		it_p1 = cellule.vertex.end()-1;
-	}
-	if(cpt>0){std::cout<<cpt<<std::endl;}
+	
+	//if(cpt>0){std::cout<<"nbr segments : "<<cpt<<std::endl;}
+	
+	//std::cout<<"it_p1 fin : "<<*it_p1<<std::endl;
+	//std::cout<<"it_p2 fin : "<<*it_p2<<std::endl;
+	
+	//std::cout<<"it_vertcell fin : "<<*it_vertcell<<std::endl;
+	//std::cout<<"it_vertpoly fin : "<<*it_vertpoly<<std::endl;
 	
 	return cpt;
 }
 
-bool voronoi::compare_color(Scalar color1, Scalar color2)
+bool voronoi::compare_color(const Scalar& color1, const Scalar& color2)
 {
 
-	bool dY;
-	bool dU;
-	bool dV;
-
-	Mat color1m = Mat (1,1,CV_8UC3,color1);
-	Mat color1mo;
-	Mat color2m = Mat(1, 1, CV_8UC3, color2);
-	Mat color2mo;
-
-	cvtColor(color1m, color1mo, COLOR_BGR2YUV);
-	cvtColor(color2m, color2mo, COLOR_BGR2YUV);
-
-	dY = color1m.at<Vec3b>(0,0)[0] - color2m.at<Vec3b>(0, 0)[0] > 48;
-	dU = color1m.at<Vec3b>(0, 0)[1] - color2m.at<Vec3b>(0, 0)[1] > 7;
-	dV= color1m.at<Vec3b>(0, 0)[2] - color2m.at<Vec3b>(0, 0)[2] > 6;
-
-	if (dY || dU || dV)
-	{
-		return false;
-	}
-
-	return true;
+	bool dB;
+	bool dG;
+	bool dR;
+	
+	int R1 = color1[2];
+	int G1 = color1[1];
+	int B1 = color1[0];
+	int R2 = color2[2];
+	int G2 = color2[1];
+	int B2 = color2[0];
+	
+	dR = abs(R1-R2)<20;
+	dG = abs(G1-G2)<20;
+	dB = abs(B1-B2)<20;
+	
+	return (dR && dG && dB);
 
 }
