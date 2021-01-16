@@ -50,7 +50,6 @@ int main()
     
     voro.compute_vertex();
     img_voro = voro.draw_voronoi();
-    Mat img_voro_union = voro.draw_voronoi();
     
     imshow("voronoi cellules", img_voro);
     waitKey(0);
@@ -61,7 +60,7 @@ int main()
     waitKey(0);
     
     voro.polygon();
-    voro.draw_cells_union(img_voro_union,0);
+    Mat img_voro_union = voro.draw_cells_union();
     
     imshow("voronoi union cellules", img_voro_union);
     waitKey(0);
