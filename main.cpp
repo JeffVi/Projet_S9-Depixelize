@@ -3,6 +3,7 @@
 
 #include "src/similarity_graph.h"
 #include "src/voronoi_diagram.h"
+#include "src/spline.h"
 
 using namespace cv;
 
