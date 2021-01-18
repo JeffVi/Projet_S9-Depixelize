@@ -16,6 +16,7 @@ B_splines::B_splines(voronoi& voronoi_diagram)
 	{
 		cell new_cell = *it_cell;
 		spline new_spline = spline(new_cell.vertex);
+		new_spline.color = new_cell.color;
 		splines.push_back(new_spline);
 	}
 }
