@@ -25,6 +25,7 @@ public:
 	
 	std::vector<polygon> holes;
 	polygon spline_poly;
+	Scalar color;
 	
 	void find_holes();
 	Mat draw_spline(float scale, int rows, int cols);
