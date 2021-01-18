@@ -633,7 +633,7 @@ void voronoi::union_poly()
 	int indice_poly_1 = -1;
 	bool edge_found = false;
 	
-	for(it_poly_1 = polygons.begin(); it_poly_1 != polygons.end() - 1; it_poly_1++)
+	for(it_poly_1 = polygons.begin(); it_poly_1 != polygons.end(); it_poly_1++)
 	{
 		cell poly_1 = *it_poly_1;
 		indice_poly_1++;
@@ -703,6 +703,7 @@ void voronoi::union_poly()
 							polygons.erase(it_poly_2);
 							it_poly_1 = polygons.begin() + indice_poly_1;
 							it_poly_2 = polygons.begin() + indice_poly_1;
+							indice_poly_2 = indice_poly_1;
 							
 							//std::cout<<"nombre polys : "<<polygons.size()<<std::endl;
 							
