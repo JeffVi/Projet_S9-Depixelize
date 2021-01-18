@@ -641,7 +641,7 @@ void voronoi::union_poly()
 		
 		//std::cout<<"*****indice_poly_1 : "<<indice_poly_1<<std::endl;
 		
-		for(it_poly_2 = polygons.begin() + indice_poly_1; it_poly_2 != polygons.end(); it_poly_2++)
+		for(it_poly_2 = polygons.begin() + indice_poly_1 + 1; it_poly_2 != polygons.end(); it_poly_2++)
 		{
 			cell poly_2 = *it_poly_2;
 			indice_poly_2++;
