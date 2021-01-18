@@ -66,6 +66,9 @@ int main()
     
     imshow("voronoi union cellules", img_voro_union);
     waitKey(0);
+    
+    B_splines bsplines = B_splines(voro);
+    bsplines.find_holes_splines();
 
     return 0;
 }
