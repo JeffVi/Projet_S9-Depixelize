@@ -30,11 +30,15 @@ public:
 	void find_holes();
 	Mat draw_spline(float scale, int rows, int cols);
 	
+	void calculate_spline(Mat& image, polygon spline_poly);
+	
 private:
 
 	std::vector<Point>::iterator it_p1;
 	std::vector<Point>::iterator it_p2;
 	std::vector<Point> vertex;
+	
+	Mat Ms = (Mat_<float>(4,4) << -1/6, 3/6, -3/6, 1/6, 3/6, -6/6, 0, 4/6, -3/6, 3/6, 3/6, 1/6, 1/6, 0, 0, 0);
 	
 	bool find_edge(std::vector<Point>::iterator& it_1, std::vector<Point>::iterator& it_2);
 };
