@@ -69,6 +69,11 @@ int main()
     
     B_splines bsplines = B_splines(voro);
     bsplines.find_holes_splines();
+    
+    for(int m=0; m<bsplines.splines.size()-1 ; m++)
+    {
+    	bsplines.splines[m].calculate_spline(img_voro, bsplines.splines[m].spline_poly);
+    }
 
     return 0;
 }
