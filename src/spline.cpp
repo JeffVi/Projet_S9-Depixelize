@@ -138,6 +138,103 @@ bool spline::find_edge(std::vector<Point>::iterator& it_1, std::vector<Point>::i
 	return cpt>1;
 }
 
+void spline::calculate_spline(Mat& image, polygon spline_poly)
+{
+	std::vector<Point> res_spline;
+	
+	Mat im = Mat(rows*ceil(scale),cols*ceil(scale),CV_8UC3,Scalar(0));
+	
+	for(int i=0; i < spline_poly.vertex.size(); i++)
+	{
+		Mat P_x;
+		Mat P_y;
+		float t;
+		std::cout << spline_poly.vertex.size() << std::endl;
+		if(i < spline_poly.vertex.size()-3)
+		{
+			float P0_x = spline_poly.vertex[i].x;
+			float P1_x = spline_poly.vertex[i+1].x;
+			float P2_x = spline_poly.vertex[i+2].x;
+			float P3_x = spline_poly.vertex[i+3].x;
+			P_x = (Mat_<float>(4,1) << P0_x, P1_x, P2_x, P3_x);
+			
+			float P0_y = spline_poly.vertex[i].y;
+			float P1_y = spline_poly.vertex[i+1].y;
+			float P2_y = spline_poly.vertex[i+2].y;
+			float P3_y = spline_poly.vertex[i+3].y;
+			P_y = (Mat_<float>(4,1) << P0_y, P1_y, P2_y, P3_y);
+		}
+		else if(i == spline_poly.vertex.size()-3)
+		{
+			float P0_x = spline_poly.vertex[i].x;
+			float P1_x = spline_poly.vertex[i+1].x;
+			float P2_x = spline_poly.vertex[i+2].x;
+			float P3_x = spline_poly.vertex[0].x;
+			P_x = (Mat_<float>(4,1) << P0_x, P1_x, P2_x, P3_x);
+			
+			float P0_y = spline_poly.vertex[i].y;
+			float P1_y = spline_poly.vertex[i+1].y;
+			float P2_y = spline_poly.vertex[i+2].y;
+			float P3_y = spline_poly.vertex[0].y;
+			P_y = (Mat_<float>(4,1) << P0_y, P1_y, P2_y, P3_y);
+		}
+		else if(i == spline_poly.vertex.size()-2)
+		{
+			float P0_x = spline_poly.vertex[i].x;
+			float P1_x = spline_poly.vertex[i+1].x;
+			float P2_x = spline_poly.vertex[0].x;
+			float P3_x = spline_poly.vertex[1].x;
+			P_x = (Mat_<float>(4,1) << P0_x, P1_x, P2_x, P3_x);
+			
+			float P0_y = spline_poly.vertex[i].y;
+			float P1_y = spline_poly.vertex[i+1].y;
+			float P2_y = spline_poly.vertex[0].y;
+			float P3_y = spline_poly.vertex[1].y;
+			P_y = (Mat_<float>(4,1) << P0_y, P1_y, P2_y, P3_y);
+		}
+		else if(i == spline_poly.vertex.size()-1)
+		{
+			float P0_x = spline_poly.vertex[i].x;
+			float P1_x = spline_poly.vertex[0].x;
+			float P2_x = spline_poly.vertex[1].x;
+			float P3_x = spline_poly.vertex[2].x;
+			P_x = (Mat_<float>(4,1) << P0_x, P1_x, P2_x, P3_x);
+			
+			float P0_y = spline_poly.vertex[i].y;
+			float P1_y = spline_poly.vertex[0].y;
+			float P2_y = spline_poly.vertex[1].y;
+			float P3_y = spline_poly.vertex[2].y;
+			P_y = (Mat_<float>(4,1) << P0_y, P1_y, P2_y, P3_y);
+		}
+		std::cout << "sortie" << std::endl;
+		for(int j = 0; j < 10; j++)
+		{
+			Mat T;
+			Point ajout;
+			
+			t = j/10;
+			T = (Mat_<float>(1,4) << pow(t,3), pow(t,2), t, 1);
+			
+			Mat spline_ajout_x = T*Ms*P_x;
+			Mat spline_ajout_y = T*Ms*P_y;
+			
+			ajout = Point(spline_ajout_x.at<float>(0,0), spline_ajout_y.at<float>(0,0));
+			res_spline.push_back(ajout);
+		}	
+		
+		
+		
+		
+	}	
+	std::cout << res_spline.size() << std::endl;
+	for(int k=1; k < res_spline.size()-2; k++)
+	{
+		line(image, res_spline[k], res_spline[k+1], Scalar(255, 0, 0));
+	}
+	
+	
+}
+
 Mat spline::draw_spline(float scale, int rows, int cols)
 {
 	Mat drawed_spline = Mat(rows*ceil(scale),cols*ceil(scale),CV_8UC3,Scalar(255,255,255));
