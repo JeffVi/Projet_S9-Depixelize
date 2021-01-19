@@ -300,7 +300,7 @@ Mat B_splines::color_spline(Mat drawed_spline)
 	std::vector<std::vector<Point>> vect_vect;
 	std::vector<Scalar> color;
 	
-	for(int m=0; m < splines.size()-1 ; m++)
+	for(int m=0; m < splines.size() ; m++)
 	{
 		std::vector<Point> res_spline_f = splines[m].calculate_spline(drawed_spline, splines[m].spline_poly);
 		vect_vect.push_back(res_spline_f);
@@ -311,7 +311,7 @@ Mat B_splines::color_spline(Mat drawed_spline)
 	int cpt = 0;
 	std::vector<std::vector<Point>>::iterator it;
 	
-	for(it = vect_vect.begin(); it != vect_vect.end()-1; it++)
+	for(it = vect_vect.begin(); it != vect_vect.end(); it++)
 	{
 		std::vector<Point> itera = *it;
 		const int npt_spl = itera.size();
