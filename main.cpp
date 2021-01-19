@@ -74,6 +74,9 @@ int main()
     {
     	bsplines.splines[m].calculate_spline(img_voro, bsplines.splines[m].spline_poly);
     }
+    imshow("spline", img_voro);
+    waitKey(0);
+    
 
     return 0;
 }
