@@ -295,6 +295,34 @@ void spline::spline_cas_part(polygon spline_poly, std::vector<Point>& res_spline
 	}
 }
 
+Mat B_splines::color_spline(Mat drawed_spline)
+{
+	std::vector<std::vector<Point>> vect_vect;
+	std::vector<Scalar> color;
+	
+	for(int m=0; m < splines.size()-1 ; m++)
+	{
+		std::vector<Point> res_spline_f = splines[m].calculate_spline(drawed_spline, splines[m].spline_poly);
+		vect_vect.push_back(res_spline_f);
+		color.push_back(splines[m].color);
+
+	}
+
+	int cpt = 0;
+	std::vector<std::vector<Point>>::iterator it;
+	
+	for(it = vect_vect.begin(); it != vect_vect.end()-1; it++)
+	{
+		std::vector<Point> itera = *it;
+		const int npt_spl = itera.size();
+		const Point* ppt_spl = &itera[0];
+		fillPoly(drawed_spline,&ppt_spl,&npt_spl,1,color[cpt]);
+		cpt += 1;
+	}
+	
+	return drawed_spline;
+}
+
 Mat spline::draw_spline(float scale, int rows, int cols)
 {
 	Mat drawed_spline = Mat(rows*ceil(scale),cols*ceil(scale),CV_8UC3,Scalar(255,255,255));
