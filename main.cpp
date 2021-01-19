@@ -4,6 +4,7 @@
 #include "src/similarity_graph.h"
 #include "src/voronoi_diagram.h"
 #include "src/spline.h"
+#include "src/optimize.h"
 
 using namespace cv;
 
@@ -69,6 +70,8 @@ int main()
     
     B_splines bsplines = B_splines(voro);
     bsplines.find_holes_splines();
+    
+    optimize_Bsplines(bsplines);
     
     Mat drawed_splines = Mat(voro.rows*ceil(voro.scale),voro.cols*ceil(voro.scale),CV_8UC3,Scalar(255,255,255));
    
