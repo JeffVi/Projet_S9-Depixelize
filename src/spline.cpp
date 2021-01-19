@@ -142,8 +142,6 @@ void spline::calculate_spline(Mat& image, polygon spline_poly)
 {
 	std::vector<Point> res_spline;
 	
-	Mat im = Mat(rows*ceil(scale),cols*ceil(scale),CV_8UC3,Scalar(0));
-	
 	for(int i=0; i < spline_poly.vertex.size(); i++)
 	{
 		Mat P_x;
