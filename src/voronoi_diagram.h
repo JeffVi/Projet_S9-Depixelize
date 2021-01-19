@@ -28,6 +28,10 @@ class voronoi
 {
 public:
 
+	float scale;
+	int rows;
+	int cols;
+	
 	voronoi();
 	voronoi(Mat image, Mat pixels_nodes, float diagram_scale);
 	
@@ -41,7 +45,7 @@ public:
 	void compute_vertex();
 	bool compare_color(const Scalar& color1, const Scalar& color2);
 	Mat draw_voronoi();
-	void draw_cells(Mat& voro);
+	void draw_cells(Mat& );
 	Mat draw_cells_union();
 	void draw_cells_union(Mat& voro);
 	void draw_cells_union(Mat& voro, int id_cell);
@@ -49,9 +53,6 @@ public:
 
 private:
 
-	float scale;
-	int rows;
-	int cols;
 	Mat imagep;
 	Mat pixels_nodes_todo;
 	std::vector<cell> cells;
