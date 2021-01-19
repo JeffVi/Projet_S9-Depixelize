@@ -138,7 +138,7 @@ bool spline::find_edge(std::vector<Point>::iterator& it_1, std::vector<Point>::i
 	return cpt>1;
 }
 
-void spline::calculate_spline(Mat& image, polygon spline_poly)
+std::vector<Point> spline::calculate_spline(Mat& image, polygon spline_poly)
 {
 	std::vector<Point> res_spline;
 	
@@ -232,7 +232,7 @@ void spline::calculate_spline(Mat& image, polygon spline_poly)
 		line(image, res_spline[k], res_spline[k+1], Scalar(255, 0, 0));
 	}
 	
-	
+	return res_spline;
 }
 
 void spline::spline_cas_part(polygon spline_poly, std::vector<Point>& res_spline) 
