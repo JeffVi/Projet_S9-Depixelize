@@ -45,7 +45,7 @@ public:
 	void compute_vertex();
 	bool compare_color(const Scalar& color1, const Scalar& color2);
 	Mat draw_voronoi();
-	void draw_cells(Mat& );
+	void draw_cells(Mat& voro);
 	Mat draw_cells_union();
 	void draw_cells_union(Mat& voro);
 	void draw_cells_union(Mat& voro, int id_cell);
