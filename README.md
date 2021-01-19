@@ -2,7 +2,7 @@
 ## Depixelizing
 This project is about **depixelizing pixel art** using the [Kopf-Lischinski algorithm](https://johanneskopf.de/publications/pixelart/) and [OpenCV](https://opencv.org/) **C++** library.
 
-## v1.4
+## v1.8
 
 ### Pixel Art
 Draw the **pixel art**.
@@ -15,3 +15,7 @@ Compute and draw the **similarity graph** of a pixel art with and without **cros
 Compute and draw the **Voronoi diagram** with cells reflecting the pixel art.
 Compute and draw the **Voronoi diagram** with cells reflecting the connections in the **resolved similarity graph**.
 Compute and draw the **Voronoi diagram** with **united cells** (max 51).
+
+### B-Splines
+Compute and draw the optimized **Spline Curves** (minimized spline curvature).
+*Without junctions*
