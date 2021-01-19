@@ -57,6 +57,12 @@ public:
 	void find_holes_splines();
 	void print_spline(int id_spline);
 	
+	Mat color_spline(Mat drawed_spline);
+	
+	int rows;
+	int cols;
+	float scale;
+	
 };
 
 #endif
