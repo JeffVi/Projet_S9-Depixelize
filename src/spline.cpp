@@ -149,7 +149,7 @@ void spline::calculate_spline(Mat& image, polygon spline_poly)
 		Mat P_x;
 		Mat P_y;
 		float t;
-		std::cout << spline_poly.vertex.size() << std::endl;
+		
 		if(i < spline_poly.vertex.size()-3)
 		{
 			float P0_x = spline_poly.vertex[i].x;
@@ -206,14 +206,14 @@ void spline::calculate_spline(Mat& image, polygon spline_poly)
 			float P3_y = spline_poly.vertex[2].y;
 			P_y = (Mat_<float>(4,1) << P0_y, P1_y, P2_y, P3_y);
 		}
-		std::cout << "sortie" << std::endl;
-		for(int j = 0; j < 10; j++)
+		int l = 10;
+		for(int j = 0; j < l; j++)
 		{
 			Mat T;
 			Point ajout;
 			
-			t = j/10;
-			T = (Mat_<float>(1,4) << pow(t,3), pow(t,2), t, 1);
+			t = j/(float)10;
+			T = (Mat_<float>(1,4) << t*t*t, t*t, t, 1);
 			
 			Mat spline_ajout_x = T*Ms*P_x;
 			Mat spline_ajout_y = T*Ms*P_y;
@@ -226,7 +226,7 @@ void spline::calculate_spline(Mat& image, polygon spline_poly)
 		
 		
 	}	
-	std::cout << res_spline.size() << std::endl;
+	
 	for(int k=1; k < res_spline.size()-2; k++)
 	{
 		line(image, res_spline[k], res_spline[k+1], Scalar(255, 0, 0));
