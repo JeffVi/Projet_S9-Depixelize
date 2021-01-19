@@ -30,7 +30,7 @@ public:
 	void find_holes();
 	Mat draw_spline(float scale, int rows, int cols);
 	
-	void calculate_spline(Mat& image, polygon spline_poly);
+	std::vector<Point> calculate_spline(Mat& image, polygon spline_poly);
 	void spline_cas_part(polygon spline_poly, std::vector<Point>& res_spline);
 	
 private:
