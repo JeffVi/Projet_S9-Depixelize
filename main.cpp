@@ -69,6 +69,14 @@ int main()
     
     B_splines bsplines = B_splines(voro);
     bsplines.find_holes_splines();
+    
+    Mat drawed_splines = Mat(voro.rows*ceil(voro.scale),voro.cols*ceil(voro.scale),CV_8UC3,Scalar(255,255,255));
+   
+    Mat drawed_spline = bsplines.color_spline(drawed_splines);
+    
+    imshow("spline", drawed_spline);
+    waitKey(0);
+    
 
     return 0;
 }

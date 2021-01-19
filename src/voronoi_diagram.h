@@ -28,6 +28,10 @@ class voronoi
 {
 public:
 
+	float scale;
+	int rows;
+	int cols;
+	
 	voronoi();
 	voronoi(Mat image, Mat pixels_nodes, float diagram_scale);
 	
@@ -49,9 +53,6 @@ public:
 
 private:
 
-	float scale;
-	int rows;
-	int cols;
 	Mat imagep;
 	Mat pixels_nodes_todo;
 	std::vector<cell> cells;
