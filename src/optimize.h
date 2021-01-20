@@ -13,7 +13,7 @@ void optimize_Bsplines(B_splines& bsplines);
 // Optimisation du spline
 void optimize_spline(spline& spline);
 
-// Calcul de l'Ã©nergie
+// Calcul de l'énergie
 float calc_energy(Point& p0, Point& p1, Point& p2, Point& p_hat);
 
 float curvature(Point& m0, Point& p1, Point& m2, float t);

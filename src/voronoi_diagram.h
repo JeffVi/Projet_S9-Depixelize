@@ -31,12 +31,12 @@ public:
 	float scale;
 	int rows;
 	int cols;
-	
+
 	voronoi();
 	voronoi(Mat image, Mat pixels_nodes, float diagram_scale);
-	
+
 	std::vector<cell> polygons;
-	
+
 	void polygon();
 	void polygon(int nbr_cells);
 	void union_poly();
@@ -58,7 +58,7 @@ private:
 	std::vector<cell> cells;
 	std::vector<Point>::iterator it_p1;
 	std::vector<Point>::iterator it_p2;
-	
+
 	std::vector<int> get_cell_adj(int i, int j, int k);
 	int find_edge(std::vector<Point>::iterator& it_vertpoly, std::vector<Point>::iterator& it_vertcell, cell& poly, cell& cellule, int& indice_vertpoly);
 };
