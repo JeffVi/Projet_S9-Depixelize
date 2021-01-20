@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <opencv2/opencv.hpp>
-#include "src/similarity_graph.h"
-#include "src/voronoi_diagram.h"
 #include "Projet_Depixelisation.h"
-#include "src/spline.h"
-#include "src/optimize.h"
-
-
-
 
 using namespace cv;
 
@@ -26,13 +17,13 @@ void enregistrement_image(Mat m, std::string path)
 
     path.erase(path.size() - 4, 4);
 
-    cv::Mat frame = m; // Create a object 
+    Mat frame = m; // Create a object 
 
     std::cout << path << std::endl;
 
     file << path << "depix.png" ; // file name
 
-    cv::imwrite(file.str(), frame);
+    imwrite(file.str(), frame);
  
 }
 
@@ -71,6 +62,8 @@ int Voronoi(const wchar_t* arg)
     enregistrement_image(img_voro, filename);
     voro.draw_cells(img_voro);
     imshow("Cellules", img_voro);
+    
+    return 0;
 }
 
 int Union(const wchar_t* arg)
@@ -134,7 +127,8 @@ int OpenCv(const wchar_t * arg)
     waitKey(0);
     graphe.resolu();
     imshow("nodes apres resolution", graphe.draw_nodes(21));
-
+    
+    return 0;
 }
 
 int Splines(const wchar_t* arg)
@@ -228,11 +222,3 @@ int Depix(const wchar_t* arg)
 
     return 0;
 }
-
-
-
-
-
-
-
-
