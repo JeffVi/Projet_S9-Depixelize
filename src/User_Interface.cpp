@@ -1,6 +1,10 @@
 #include <irrlicht.h>
 #include "driverChoice.h"
-#include "../Projet_Depixelisation.h"
+#include "ui/Projet_Depixelisation.h"
+#include "src/similarity_graph.h"
+#include "src/voronoi_diagram.h"
+#include "src/spline.h"
+#include "src/optimize.h"
 #include <stdio.h>
 
 using namespace irr;
@@ -63,7 +67,7 @@ public:
 
                 case GUI_ID_FILE_OPEN_BUTTON:
                     Context.listbox->addItem(L"Choix Image");
-                    env->addFileOpenDialog(L"Choisissez un pixel art à traiter", true, 0, -1, true);
+                    env->addFileOpenDialog(L"Choisissez un pixel art", true, 0, -1, true);
                     id_save = id;
                     return true;
 
@@ -100,7 +104,7 @@ public:
 
             case EGET_FILE_SELECTED:
             {
-                //Appelle l'algorithe de dépixelisation avec l'argument représentant le chemin de l'image à traiter
+                //Appelle l'algorithe de dÃ©pixelisation avec l'argument reprÃ©sentant le chemin de l'image Ã  traiter
                 IGUIFileOpenDialog* dialog = (IGUIFileOpenDialog*)event.GUIEvent.Caller;
                 
                 Context.listbox->addItem(dialog->getFileName());
@@ -108,8 +112,8 @@ public:
                 switch (id_save)
                 {
                 case GUI_ID_FILE_OPEN_BUTTON:
-                    Context.listbox->addItem(L"A été traité");
-                    env->addFileOpenDialog(L"L'image a bien été traitée. Choisissez une autre image", true, 0, -1, true);
+                    Context.listbox->addItem(L"Done");
+                    env->addFileOpenDialog(L"Choisissez une autre image", true, 0, -1, true);
                     OpenCv(dialog->getFileName());
                     break;
 
@@ -164,7 +168,7 @@ int main()
 
     if (device == 0)
         return 1; // could not create selected driver.
-    device->setWindowCaption(L"Dépixelisation par vectorisation");
+    device->setWindowCaption(L"Depixelisation par vectorisation");
     device->setResizable(true);
 
     video::IVideoDriver* driver = device->getVideoDriver();
@@ -176,7 +180,7 @@ int main()
 
     skin->setFont(env->getBuiltInFont(), EGDF_TOOLTIP);
 
-    // Création des boutons
+    // CrÃ©ation des boutons
     env->addButton(rect<s32>(10, 240 - 40, 200, 240 + 144 - 120), 0, GUI_ID_FILE_OPEN_BUTTON,
         L"Graph similitude", L"Similitude");
     env->addButton(rect<s32>(220, 240 - 40, 410, 240 + 144 - 120), 0, GUI_ID_VORONOI,
@@ -184,9 +188,9 @@ int main()
     env->addButton(rect<s32>(10, 320 - 40, 200, 320 + 144 - 120), 0, GUI_ID_UNION,
         L"Union cellules", L"Union");
     env->addButton(rect<s32>(220, 320 - 40, 410, 320 + 144 - 120), 0, GUI_ID_SPLINES,
-        L"Courbes paramétriques", L"Splines");
+        L"Courbes parametriques", L"Splines");
     env->addButton(rect<s32>(10, 400 - 40, 200, 400 + 144 - 120), 0, GUI_ID_DEPIXELISATION,
-        L"Dépixelisation", L"Dépixelisation");
+        L"Depixelisation", L"Depixelisation");
     env->addButton(rect<s32>(220, 400 - 40, 410, 400 + 144 - 120), 0, GUI_ID_QUIT_BUTTON,
         L"Quit", L"Exit Programm");
 
