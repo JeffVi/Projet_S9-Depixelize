@@ -1,0 +1,1 @@
+add_library(srcDepix similarity_graph.cpp voronoi_diagram.cpp spline.cpp optimize.cpp )

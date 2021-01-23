@@ -1,17 +1,26 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 
-#include "src/similarity_graph.h"
-#include "src/voronoi_diagram.h"
-#include "src/spline.h"
-#include "src/optimize.h"
+#include "similarity_graph.h"
+#include "voronoi_diagram.h"
+#include "spline.h"
+#include "optimize.h"
 
 using namespace cv;
 
-int main()
+int main(int argc, char* argv[])
 {
     Mat image;
-    image = imread("img/smw_boo_input.png");
+
+    if (argc == 1)
+    {
+        image = imread("pixelart.png");
+    }
+    else if (argc == 2)
+    {
+        image = imread(argv[1]);
+    }
+    else { printf("Please give only the path to one pixelart \n"); return -1; }
 
     if ( !image.data )
     {
