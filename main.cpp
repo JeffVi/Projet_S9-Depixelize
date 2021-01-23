@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
-//TestVS
+//TestVS giticore
 #include "src/similarity_graph.h"
 #include "src/voronoi_diagram.h"
 #include "src/spline.h"

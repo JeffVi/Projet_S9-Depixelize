@@ -1,0 +1,68 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Depixelize",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Depix::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Depix-Debug-f25fed2fd4296d4a0c69.json",
+					"name" : "Depix",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "lDepix::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-lDepix-Debug-ea82f2673e3154e030bc.json",
+					"name" : "lDepix",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/util1/source/repos/JeffVi/Projet_S9/out/build/x64-Debug (par défaut)",
+		"source" : "C:/Users/util1/source/repos/JeffVi/Projet_S9"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 1
+	}
+}
